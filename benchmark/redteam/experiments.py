@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 import synth_attacks as sa
 
 SEEDS = list(range(1, 13))   # 12 seeds
-OUT = "/private/tmp/claude-501/-Users-sanketsarkar-Desktop-RND-vcad/eb5b2acb-d6e5-4a0f-b9c6-f0f858219666/scratchpad/redteam/out"
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out")
 RESULTS = {}
 
 
