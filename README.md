@@ -146,7 +146,7 @@ This is a **baseline screen**, and it is honest about what it is not:
 - [x] Windowed / streaming mode (`analyze_windows`, `StreamAnalyzer`, `--window`)
 - [x] Capture tool for corpus collection (`tools/capture/`)
 - [x] Threat-model coverage matrix across the 11 attack classes (`docs/threat_model.md`)
-- [ ] Evaluate on [AdvSV](https://advsv.github.io/) (matched over-the-air adversarial-vs-ASV) and ASVspoof 5 adversarial subset — the only public matched-device attack corpora
+- [x] Assess [AdvSV](https://advsv.github.io/) — out of scope (16 kHz, in-band, gated; `docs/threat_model.md`). ASVspoof stays the anti-spoofing corpus
 - [ ] Reference integration for an action-taking voice agent's confirmation step
 
 ## Scope across attack classes
