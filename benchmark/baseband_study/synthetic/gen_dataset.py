@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import csv
 import os
+import sys
 
 import numpy as np
 from scipy import signal as sps
@@ -25,7 +26,7 @@ from scipy.io import wavfile
 from rt_common import adc_capture
 from benchmark.synth_attacks import (
     _speechlike_envelope, _voiceband_content, _speaker_and_air,
-    _mic_nonlinearity, _add_noise, _normalise, _bandpass,
+    _mic_nonlinearity, _reverb, _add_noise, _normalise, _bandpass,
 )
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -156,7 +157,7 @@ def make_attack_192k(rng, cond, speech_pool, carrier_hz, scheme, modulator, mod_
         s = s - s.mean()
     else:  # real speech waveform as the modulating command
         s, _ = real_speech(rng, speech_pool)
-        s = _bandpass(s, FS, 300.0, 4000.0)
+        s = _bandpass(s, FS, 50.0, 4000.0)   # keep f0: attackers low-pass the command, they do not high-pass it
         s /= (np.max(np.abs(s)) or 1.0)
 
     c = np.cos(2 * np.pi * carrier_hz * t)

@@ -30,6 +30,12 @@ from sklearn.metrics import roc_auc_score, roc_curve
 import features as F
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# absolute-level features are excluded from the models: in the fork chain the carrier is
+# normalised to full scale, so attack baseband is ~20 dB quieter than benign content -- a
+# gain/AGC artefact, not a cue.  They stay in the per-feature AUC table as flagged confounds.
+LEVEL_FEATURES = {"a_lf2_20_dbfs"}
+MODEL_IDX = [i for i, n in enumerate(F.FEATURE_NAMES) if n not in LEVEL_FEATURES]
+MODEL_NAMES = [F.FEATURE_NAMES[i] for i in MODEL_IDX]
 RATES = {48_000: "x48", 16_000: "x16"}
 
 
@@ -134,6 +140,7 @@ def main():
 
     # ---------------- models, CV, EER, look-alike FA
     imp_rows = []
+    feats = {fs: feats[fs][:, MODEL_IDX] for fs in RATES}
     for fs in RATES:
         Xf = feats[fs]
         for name in ("logreg", "gboost"):
@@ -156,13 +163,13 @@ def main():
             print(fs, name, res[f"{name}_{fs // 1000}k"])
             if name == "logreg":
                 coef = full.named_steps["logisticregression"].coef_[0]
-                for n, c in zip(F.FEATURE_NAMES, coef):
+                for n, c in zip(MODEL_NAMES, coef):
                     imp_rows.append({"rate": fs, "model": name, "feature": n, "importance": round(float(c), 4)})
             else:
                 from sklearn.inspection import permutation_importance
                 pi = permutation_importance(full, Xf[main_m], y[main_m], scoring="roc_auc",
                                             n_repeats=5, random_state=0)
-                for n, c in zip(F.FEATURE_NAMES, pi.importances_mean):
+                for n, c in zip(MODEL_NAMES, pi.importances_mean):
                     imp_rows.append({"rate": fs, "model": name, "feature": n, "importance": round(float(c), 4)})
     with open(os.path.join(HERE, f"feature_importance{tag}.csv"), "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["rate", "model", "feature", "importance"])

@@ -1,0 +1,432 @@
+{
+ "n_attack": 480,
+ "n_benign": 540,
+ "n_lookalike": 180,
+ "per_feature_auc": [
+  {
+   "feature": "a_sub20_frac",
+   "auc_48k": 0.491,
+   "auc_48k_env": 0.544,
+   "auc_48k_speech": 0.433,
+   "auc_16k": 0.703,
+   "auc_16k_env": 0.786,
+   "auc_16k_speech": 0.611
+  },
+  {
+   "feature": "a_sub100_frac",
+   "auc_48k": 0.467,
+   "auc_48k_env": 0.49,
+   "auc_48k_speech": 0.443,
+   "auc_16k": 0.651,
+   "auc_16k_env": 0.696,
+   "auc_16k_speech": 0.602
+  },
+  {
+   "feature": "a_ratio_20_100_vs_100_300",
+   "auc_48k": 0.572,
+   "auc_48k_env": 0.584,
+   "auc_48k_speech": 0.559,
+   "auc_16k": 0.576,
+   "auc_16k_env": 0.589,
+   "auc_16k_speech": 0.562
+  },
+  {
+   "feature": "a_lf2_20_vs_speech_db",
+   "auc_48k": 0.658,
+   "auc_48k_env": 0.757,
+   "auc_48k_speech": 0.549,
+   "auc_16k": 0.674,
+   "auc_16k_env": 0.757,
+   "auc_16k_speech": 0.581
+  },
+  {
+   "feature": "a_lf_rate_2_20_vs_0p5_2_db",
+   "auc_48k": 0.601,
+   "auc_48k_env": 0.621,
+   "auc_48k_speech": 0.579,
+   "auc_16k": 0.569,
+   "auc_16k_env": 0.604,
+   "auc_16k_speech": 0.531
+  },
+  {
+   "feature": "a_lf2_20_dbfs",
+   "auc_48k": 0.173,
+   "auc_48k_env": 0.22,
+   "auc_48k_speech": 0.122,
+   "auc_16k": 0.18,
+   "auc_16k_env": 0.223,
+   "auc_16k_speech": 0.132
+  },
+  {
+   "feature": "b_line_prom_db",
+   "auc_48k": 0.631,
+   "auc_48k_env": 0.662,
+   "auc_48k_speech": 0.597,
+   "auc_16k": 0.449,
+   "auc_16k_env": 0.457,
+   "auc_16k_speech": 0.44
+  },
+  {
+   "feature": "b_line_stability",
+   "auc_48k": 0.643,
+   "auc_48k_env": 0.669,
+   "auc_48k_speech": 0.613,
+   "auc_16k": 0.469,
+   "auc_16k_env": 0.454,
+   "auc_16k_speech": 0.485
+  },
+  {
+   "feature": "b_line_freq_norm",
+   "auc_48k": 0.627,
+   "auc_48k_env": 0.611,
+   "auc_48k_speech": 0.645,
+   "auc_16k": 0.456,
+   "auc_16k_env": 0.469,
+   "auc_16k_speech": 0.442
+  },
+  {
+   "feature": "b_line_sideband_db",
+   "auc_48k": 0.298,
+   "auc_48k_env": 0.268,
+   "auc_48k_speech": 0.33,
+   "auc_16k": 0.519,
+   "auc_16k_env": 0.494,
+   "auc_16k_speech": 0.546
+  },
+  {
+   "feature": "c_mod_ratio_lo_hi",
+   "auc_48k": 0.419,
+   "auc_48k_env": 0.407,
+   "auc_48k_speech": 0.432,
+   "auc_16k": 0.42,
+   "auc_16k_env": 0.408,
+   "auc_16k_speech": 0.432
+  },
+  {
+   "feature": "c_env_sq_corr",
+   "auc_48k": 0.517,
+   "auc_48k_env": 0.51,
+   "auc_48k_speech": 0.526,
+   "auc_16k": 0.519,
+   "auc_16k_env": 0.511,
+   "auc_16k_speech": 0.527
+  },
+  {
+   "feature": "c_env_kurt",
+   "auc_48k": 0.502,
+   "auc_48k_env": 0.509,
+   "auc_48k_speech": 0.494,
+   "auc_16k": 0.504,
+   "auc_16k_env": 0.511,
+   "auc_16k_speech": 0.495
+  },
+  {
+   "feature": "d_bicoh_mean",
+   "auc_48k": 0.456,
+   "auc_48k_env": 0.471,
+   "auc_48k_speech": 0.439,
+   "auc_16k": 0.516,
+   "auc_16k_env": 0.522,
+   "auc_16k_speech": 0.508
+  },
+  {
+   "feature": "d_bicoh_max",
+   "auc_48k": 0.394,
+   "auc_48k_env": 0.402,
+   "auc_48k_speech": 0.385,
+   "auc_16k": 0.433,
+   "auc_16k_env": 0.443,
+   "auc_16k_speech": 0.422
+  },
+  {
+   "feature": "d_bicoh_frac05",
+   "auc_48k": 0.391,
+   "auc_48k_env": 0.42,
+   "auc_48k_speech": 0.358,
+   "auc_16k": 0.466,
+   "auc_16k_env": 0.483,
+   "auc_16k_speech": 0.447
+  },
+  {
+   "feature": "d_bicoh_lf_speech",
+   "auc_48k": 0.475,
+   "auc_48k_env": 0.478,
+   "auc_48k_speech": 0.472,
+   "auc_16k": 0.504,
+   "auc_16k_env": 0.515,
+   "auc_16k_speech": 0.491
+  },
+  {
+   "feature": "e_hnr_db",
+   "auc_48k": 0.425,
+   "auc_48k_env": 0.421,
+   "auc_48k_speech": 0.428,
+   "auc_16k": 0.423,
+   "auc_16k_env": 0.419,
+   "auc_16k_speech": 0.426
+  },
+  {
+   "feature": "e_cpp_db",
+   "auc_48k": 0.455,
+   "auc_48k_env": 0.447,
+   "auc_48k_speech": 0.463,
+   "auc_16k": 0.42,
+   "auc_16k_env": 0.421,
+   "auc_16k_speech": 0.42
+  },
+  {
+   "feature": "e_voiced_frac",
+   "auc_48k": 0.429,
+   "auc_48k_env": 0.422,
+   "auc_48k_speech": 0.436,
+   "auc_16k": 0.434,
+   "auc_16k_env": 0.428,
+   "auc_16k_speech": 0.44
+  },
+  {
+   "feature": "f_flatness_0_4k",
+   "auc_48k": 0.55,
+   "auc_48k_env": 0.543,
+   "auc_48k_speech": 0.558,
+   "auc_16k": 0.553,
+   "auc_16k_env": 0.546,
+   "auc_16k_speech": 0.561
+  },
+  {
+   "feature": "f_entropy_0_4k",
+   "auc_48k": 0.562,
+   "auc_48k_env": 0.553,
+   "auc_48k_speech": 0.572,
+   "auc_16k": 0.567,
+   "auc_16k_env": 0.558,
+   "auc_16k_speech": 0.578
+  },
+  {
+   "feature": "f_h2_distortion_db",
+   "auc_48k": 0.448,
+   "auc_48k_env": 0.447,
+   "auc_48k_speech": 0.449,
+   "auc_16k": 0.428,
+   "auc_16k_env": 0.448,
+   "auc_16k_speech": 0.406
+  }
+ ],
+ "logreg_48k": {
+  "cv_auc": 0.8184,
+  "eer": 0.2745,
+  "thr95": 0.2117,
+  "fa_benign_at_95": 0.6241,
+  "fa_lookalike_at_95": {
+   "percussive": 0.6,
+   "psu_whine": 1.0,
+   "tone19k": 0.8666666666666667,
+   "all": 0.8222222222222222
+  }
+ },
+ "gboost_48k": {
+  "cv_auc": 0.9496,
+  "eer": 0.1235,
+  "thr95": 0.2267,
+  "fa_benign_at_95": 0.2778,
+  "fa_lookalike_at_95": {
+   "percussive": 0.3333333333333333,
+   "psu_whine": 0.48333333333333334,
+   "tone19k": 0.6333333333333333,
+   "all": 0.48333333333333334
+  }
+ },
+ "logreg_16k": {
+  "cv_auc": 0.7984,
+  "eer": 0.29,
+  "thr95": 0.2423,
+  "fa_benign_at_95": 0.5926,
+  "fa_lookalike_at_95": {
+   "percussive": 0.55,
+   "psu_whine": 1.0,
+   "tone19k": 0.8333333333333334,
+   "all": 0.7944444444444444
+  }
+ },
+ "gboost_16k": {
+  "cv_auc": 0.9296,
+  "eer": 0.15,
+  "thr95": 0.2821,
+  "fa_benign_at_95": 0.2759,
+  "fa_lookalike_at_95": {
+   "percussive": 0.13333333333333333,
+   "psu_whine": 0.25,
+   "tone19k": 0.5166666666666667,
+   "all": 0.3
+  }
+ },
+ "robustness": {
+  "train_hi(25-40k)_test_near(18-22k)": {
+   "logreg_48k": {
+    "auc": 0.4894,
+    "eer": 0.5318,
+    "n_train": 559,
+    "n_test": 461
+   },
+   "gboost_48k": {
+    "auc": 0.3949,
+    "eer": 0.5903,
+    "n_train": 559,
+    "n_test": 461
+   },
+   "logreg_16k": {
+    "auc": 0.8018,
+    "eer": 0.2903,
+    "n_train": 559,
+    "n_test": 461
+   },
+   "gboost_16k": {
+    "auc": 0.9237,
+    "eer": 0.1797,
+    "n_train": 559,
+    "n_test": 461
+   }
+  },
+  "train_near(18-22k)_test_hi(25-40k)": {
+   "logreg_48k": {
+    "auc": 0.4161,
+    "eer": 0.5669,
+    "n_train": 461,
+    "n_test": 559
+   },
+   "gboost_48k": {
+    "auc": 0.5859,
+    "eer": 0.4581,
+    "n_train": 461,
+    "n_test": 559
+   },
+   "logreg_16k": {
+    "auc": 0.7778,
+    "eer": 0.2969,
+    "n_train": 461,
+    "n_test": 559
+   },
+   "gboost_16k": {
+    "auc": 0.8839,
+    "eer": 0.1949,
+    "n_train": 461,
+    "n_test": 559
+   }
+  },
+  "train_a2=0.12_test_a2=0.03": {
+   "logreg_48k": {
+    "auc": 0.7239,
+    "eer": 0.3711,
+    "n_train": 183,
+    "n_test": 159
+   },
+   "gboost_48k": {
+    "auc": 0.8571,
+    "eer": 0.2139,
+    "n_train": 183,
+    "n_test": 159
+   },
+   "logreg_16k": {
+    "auc": 0.6557,
+    "eer": 0.3839,
+    "n_train": 183,
+    "n_test": 159
+   },
+   "gboost_16k": {
+    "auc": 0.7339,
+    "eer": 0.3216,
+    "n_train": 183,
+    "n_test": 159
+   }
+  },
+  "train_a2>=0.12_test_a2<=0.05": {
+   "logreg_48k": {
+    "auc": 0.7444,
+    "eer": 0.3412,
+    "n_train": 518,
+    "n_test": 328
+   },
+   "gboost_48k": {
+    "auc": 0.9001,
+    "eer": 0.1735,
+    "n_train": 518,
+    "n_test": 328
+   },
+   "logreg_16k": {
+    "auc": 0.7166,
+    "eer": 0.3323,
+    "n_train": 518,
+    "n_test": 328
+   },
+   "gboost_16k": {
+    "auc": 0.8734,
+    "eer": 0.2012,
+    "n_train": 518,
+    "n_test": 328
+   }
+  }
+ },
+ "per_subgroup_tpr": {
+  "gboost_48k": {
+   "scheme=_fpr": 0.278,
+   "scheme=am_tpr": 0.947,
+   "scheme=dsbsc_tpr": 0.952,
+   "scheme=ssb_tpr": 0.954,
+   "modulator=_fpr": 0.278,
+   "modulator=env_tpr": 0.948,
+   "modulator=speech_tpr": 0.952,
+   "kind=am_env_tpr": 0.939,
+   "kind=am_speech_tpr": 0.957,
+   "kind=dsbsc_env_tpr": 0.958,
+   "kind=dsbsc_speech_tpr": 0.942,
+   "kind=music_fpr": 0.062,
+   "kind=quiet_fpr": 0.208,
+   "kind=real_speech_fpr": 0.339,
+   "kind=silence_fpr": 0.125,
+   "kind=speech_noise_fpr": 0.5,
+   "kind=ssb_env_tpr": 0.959,
+   "kind=ssb_speech_tpr": 0.95,
+   "kind=synth_speech_fpr": 0.042,
+   "kind=tone_hf_fpr": 0.55,
+   "carrier_18-22k_tpr": 0.99,
+   "carrier_25-32k_tpr": 0.917,
+   "carrier_32-40k_tpr": 0.93,
+   "a2=0.03_tpr": 0.886,
+   "a2=0.05_tpr": 0.917,
+   "a2=0.08_tpr": 0.975,
+   "a2=0.12_tpr": 0.976,
+   "a2=0.16_tpr": 0.965,
+   "a2=0.2_tpr": 0.974
+  },
+  "gboost_16k": {
+   "scheme=_fpr": 0.276,
+   "scheme=am_tpr": 0.943,
+   "scheme=dsbsc_tpr": 0.952,
+   "scheme=ssb_tpr": 0.963,
+   "modulator=_fpr": 0.276,
+   "modulator=env_tpr": 0.96,
+   "modulator=speech_tpr": 0.939,
+   "kind=am_env_tpr": 0.947,
+   "kind=am_speech_tpr": 0.94,
+   "kind=dsbsc_env_tpr": 0.972,
+   "kind=dsbsc_speech_tpr": 0.923,
+   "kind=music_fpr": 0.01,
+   "kind=quiet_fpr": 0.062,
+   "kind=real_speech_fpr": 0.423,
+   "kind=silence_fpr": 0.292,
+   "kind=speech_noise_fpr": 0.431,
+   "kind=ssb_env_tpr": 0.98,
+   "kind=ssb_speech_tpr": 0.95,
+   "kind=synth_speech_fpr": 0.021,
+   "kind=tone_hf_fpr": 0.467,
+   "carrier_18-22k_tpr": 0.948,
+   "carrier_25-32k_tpr": 0.955,
+   "carrier_32-40k_tpr": 0.949,
+   "a2=0.03_tpr": 0.929,
+   "a2=0.05_tpr": 0.952,
+   "a2=0.08_tpr": 0.949,
+   "a2=0.12_tpr": 0.988,
+   "a2=0.16_tpr": 0.942,
+   "a2=0.2_tpr": 0.935
+  }
+ }
+}

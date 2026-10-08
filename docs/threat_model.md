@@ -82,7 +82,7 @@ injection detector and should be stated as such to a partner, not promised.
 | Dataset | Class(es) | Clips | Rate | Licence | Matched benign, same device? |
 | --- | --- | --- | --- | --- | --- |
 | [DolphinAttack set](https://github.com/USSLab/DolphinAttack) | 1 (ultrasonic AM) | 2,934 | 16 kHz | none stated | No |
-| [AdvSV](https://advsv.github.io/) ([paper](https://arxiv.org/html/2310.05369v1)) | 8 (over-the-air adversarial vs ASV) | 314k (2.0: ~628k) | n/s | CC-BY | **Yes** — genuine + adversarial replayed through 3 speakers × 3 phones in one studio |
+| [AdvSV](https://advsv.github.io/) ([paper](https://arxiv.org/html/2310.05369v1)) | 8 (over-the-air adversarial vs ASV) | 314k (2.0: ~628k) | **16 kHz** (VoxCeleb1 lineage) | CC-BY-SA, **gated** | Yes — genuine + adversarial through 3 speakers × 3 phones; but see note below |
 | [ASVspoof 2019](https://zenodo.org/records/6906306) | 11 (replay, TTS, VC) | ~121k+ | 16 kHz | ODC-By | Yes (bonafide + spoof) |
 | [ASVspoof 2021](https://www.asvspoof.org/index2021.html) (LA/PA/DF) | 11 + codec/deepfake | large | 16 kHz | ODC-By | Yes; PA has real room recordings |
 | [ASVspoof 5](https://zenodo.org/records/14498691) | 11 + 7 adversarial (partial 8) | 1,006,363 | 16 kHz | ODC-By | Yes (~2,000 speakers) |
@@ -95,6 +95,18 @@ and has no matched benign. Explicit negatives (searched, none located as of
 2026-10-08): NUIT (2), SurfingAttack/SUAD (3), GhostTalk (5), VRIFLE/AudioHijack/
 Sirens' Whisper (8), UltrasonicWhisper+ (9), MetaAttack (10) — demo pages or videos
 only; LightCommands (4) hardware demos only.
+
+> **AdvSV does not fill our gap (assessed 2026-10-08).** It is **16 kHz** and
+> **in-band**, so it is below the injection detector's capture-rate floor — every
+> clip returns INSUFFICIENT_DATA, and it cannot serve as a real-audio
+> false-positive test (which needs ≥ 36 kHz). It is also **gated** (HuggingFace
+> `amphion/AdvSV2.0`, ~85 GB, accepted-gate + token; or a Google Form for v1.0),
+> so it is not a drop-in download. Its one potential use is the experimental spoof
+> module (genuine vs adversarial EER on condition-matched audio), but our coarse
+> spectral features are not built for small PGD perturbations and would likely
+> score near chance. Conclusion: not worth a standing benchmark; **ASVspoof
+> remains the controlled anti-spoofing corpus.** The matched-data route for the
+> injection detector is still self-collection (`docs/recording_protocol.md`).
 
 **Coverage risk to state in any PoC:** our evaluation to date covers exactly one of
 eleven classes (ultrasonic demodulation, via DolphinAttack) and the near-ultrasound
