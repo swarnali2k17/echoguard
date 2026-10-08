@@ -12,7 +12,9 @@ for scope, limitations, and the research context.
 
 from .pipeline import Pipeline, Report, WindowedReport, StreamAnalyzer, InvalidInput
 from .detectors.base import Detector, Finding
+from .gate import ActionSensitivity, GateDecision, GateResult, ConfirmationGate
 
 __all__ = ["Pipeline", "Report", "WindowedReport", "StreamAnalyzer", "InvalidInput",
-           "Detector", "Finding"]
-__version__ = "0.2.0"
+           "Detector", "Finding",
+           "ActionSensitivity", "GateDecision", "GateResult", "ConfirmationGate"]
+__version__ = "0.3.0"

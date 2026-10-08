@@ -61,6 +61,26 @@ for chunk in audio_chunks:
 
 Whole-clip analysis averages one spectrum over the entire file, so a 0.3 s injection inside a minute of speech is diluted away. Use windows for anything longer than a few seconds.
 
+### Confirmation gate (for action-taking voice agents)
+
+An agent that *acts* on spoken commands shouldn't execute silently on audio that looks injected. The gate turns a verdict plus an action's sensitivity into **allow / confirm / block**:
+
+```python
+from echoguard import ConfirmationGate, ActionSensitivity, GateDecision
+
+result = ConfirmationGate().evaluate(samples, sample_rate, ActionSensitivity.CRITICAL,
+                                     command="unlock the front door")
+if result.decision is GateDecision.BLOCK:   agent.refuse(result.reason)
+elif result.decision is GateDecision.CONFIRM: agent.step_up_confirm(result.reason)
+else:                                        agent.execute()
+```
+
+```bash
+echoguard gate command.wav --action critical   # exit 0 allow · 7 confirm · 8 block
+```
+
+Critical actions are never executed silently (confirmed even on CLEAR); a 16 kHz capture is INSUFFICIENT_DATA → treated as unverified, not safe. It is defence-in-depth, not a guarantee — see `docs/confirmation_gate.md` and `examples/voice_agent_gate.py`.
+
 ### Example
 
 ```
@@ -147,7 +167,7 @@ This is a **baseline screen**, and it is honest about what it is not:
 - [x] Capture tool for corpus collection (`tools/capture/`)
 - [x] Threat-model coverage matrix across the 11 attack classes (`docs/threat_model.md`)
 - [ ] Evaluate on [AdvSV](https://advsv.github.io/) (matched over-the-air adversarial-vs-ASV) and ASVspoof 5 adversarial subset — the only public matched-device attack corpora
-- [ ] Reference integration for an action-taking voice agent's confirmation step
+- [x] Reference integration for an action-taking voice agent's confirmation step (`echoguard.gate`, `docs/confirmation_gate.md`)
 
 ## Scope across attack classes
 
