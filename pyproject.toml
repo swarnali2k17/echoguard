@@ -27,6 +27,7 @@ dependencies = [
 [project.optional-dependencies]
 spoof = ["scikit-learn>=1.1,<2"]
 bench = ["scikit-learn>=1.1,<2", "soundfile>=0.12", "pandas>=1.5", "huggingface_hub>=0.20", "datasets>=2.14"]
+capture = ["sounddevice>=0.4"]
 dev = ["pytest>=7.0", "ruff>=0.4", "mypy>=1.8", "scikit-learn>=1.1,<2"]
 
 [project.urls]
@@ -46,7 +47,7 @@ pythonpath = ["."]
 [tool.ruff]
 line-length = 110
 target-version = "py39"
-extend-exclude = ["fixtures", "benchmark/baseband_study"]  # research scripts, kept as run
+extend-exclude = ["fixtures", "benchmark/baseband_study"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "B", "UP"]

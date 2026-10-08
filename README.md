@@ -140,16 +140,34 @@ This is a **baseline screen**, and it is honest about what it is not:
 
 ## Roadmap
 
-- [ ] Real-device capture dataset across phones / speakers / wearables
-- [ ] Baseband detector for the demodulated residue (works on 16/48 kHz device captures)
+- [ ] **Matched-device capture set** (the blocking prerequisite — see `docs/recording_protocol.md`) — benign + probe from the same phones, rooms and gain chain, so the baseband work has a benign class that is not confounded with the device
+- [ ] Baseband detector for the demodulated residue (works on 16/48 kHz device captures) — blocked on the above (`BENCHMARK_REPORT.md` §7)
 - [x] Replay & voice-clone (anti-spoofing) baseline module (`echoguard.spoof`, experimental)
 - [x] Windowed / streaming mode (`analyze_windows`, `StreamAnalyzer`, `--window`)
-- [ ] Benchmark against the current attack generation (NUIT, hearable-generated sound, audio prompt injection)
+- [x] Capture tool for corpus collection (`tools/capture/`)
+- [x] Threat-model coverage matrix across the 11 attack classes (`docs/threat_model.md`)
+- [ ] Evaluate on [AdvSV](https://advsv.github.io/) (matched over-the-air adversarial-vs-ASV) and ASVspoof 5 adversarial subset — the only public matched-device attack corpora
 - [ ] Reference integration for an action-taking voice agent's confirmation step
+
+## Scope across attack classes
+
+EchoGuard targets one family — inaudible/ultrasonic **injection** — and is honest
+about the rest. `docs/threat_model.md` scores all eleven known classes on what
+survives a commodity capture and whether a software detector can see it: the
+physical-injection classes (DolphinAttack, SurfingAttack/SUAD, hearable, metamaterial)
+share one in-band residue that is the real detection target; laser (LightCommands)
+and EM/power-line (GhostTalk) leave **no** acoustic residue and are out of software
+scope; the in-band adversarial classes (hidden/adversarial audio, LLM-agent prompt
+injection) and replay/clone are separate detection problems. For most injection
+classes **no public real-attack corpus exists**, which is itself a finding.
 
 ## Research context
 
-EchoGuard is built on, and credits, a decade of prior work. See `docs/` for the attack/defense landscape. Key references: DolphinAttack (CCS 2017), SurfingAttack (NDSS 2020), NUIT (2023), EarArray (NDSS 2021), and the ACM Computing Surveys *Voice Assistant Security* survey (2022).
+EchoGuard is built on, and credits, a decade of prior work. See `docs/threat_model.md`
+for the full cited coverage matrix and `docs/landscape.md` for the attack/defense
+landscape. Key references: DolphinAttack (CCS 2017), SurfingAttack (NDSS 2020), NUIT
+(USENIX 2023), NormDetect (USENIX 2023), MicGuard (USENIX 2024), EarArray (NDSS 2021),
+and the ACM Computing Surveys *Voice Assistant Security* survey (2022).
 
 ## Contributing
 
