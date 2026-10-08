@@ -10,8 +10,9 @@ It does not generate attacks and contains no attack payloads. See README.md
 for scope, limitations, and the research context.
 """
 
-from .pipeline import Pipeline, Report
+from .pipeline import Pipeline, Report, WindowedReport, StreamAnalyzer, InvalidInput
 from .detectors.base import Detector, Finding
 
-__all__ = ["Pipeline", "Report", "Detector", "Finding"]
-__version__ = "0.1.0"
+__all__ = ["Pipeline", "Report", "WindowedReport", "StreamAnalyzer", "InvalidInput",
+           "Detector", "Finding"]
+__version__ = "0.2.0"

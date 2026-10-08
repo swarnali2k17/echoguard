@@ -1,0 +1,308 @@
+file,category,source,license,sample_rate,duration_s,labels
+speech_noisy/fsd216009.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,8.665,Female_speech_and_woman_speaking|Walk_and_footsteps|Sliding_door|Alarm|Speech|Human_voice|Door|Domestic_sounds_and_home_sounds
+speech_noisy/fsd398341.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.912,Male_speech_and_man_speaking|Stream|Splash_and_splatter|Speech|Human_voice|Water|Liquid
+speech_noisy/fsd267250.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,6.289,Crowd|Conversation|Human_group_actions|Speech|Human_voice
+speech_noisy/fsd411542.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,7.651,Male_speech_and_man_speaking|Female_speech_and_woman_speaking|Chatter|Conversation|Speech|Human_voice|Human_group_actions
+speech_noisy/fsd369247.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,11.228,Male_speech_and_man_speaking|Slam|Idling|Engine_starting|Car|Speech|Human_voice|Motor_vehicle_(road)|Vehicle|Door|Domestic_sounds_and_home_sounds|Engine
+speech_noisy/fsd257818.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,9.399,Chatter|Speech|Human_voice|Human_group_actions
+speech_noisy/fsd215990.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,10.14,Female_speech_and_woman_speaking|Walk_and_footsteps|Speech|Human_voice
+speech_noisy/fsd347033.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.361,Male_speech_and_man_speaking|Applause|Clapping|Speech|Human_voice|Human_group_actions|Hands
+speech_noisy/fsd232274.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.796,Male_speech_and_man_speaking|Idling|Car|Speech|Human_voice|Motor_vehicle_(road)|Vehicle|Engine
+speech_noisy/fsd347034.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,8.902,Male_speech_and_man_speaking|Applause|Clapping|Speech|Human_voice|Human_group_actions|Hands
+speech_noisy/fsd184833.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,8.451,Male_speech_and_man_speaking|Chatter|Crowd|Cheering|Clapping|Shout|Speech|Human_voice|Human_group_actions|Hands
+speech_noisy/fsd175231.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,5.0,Speech|Wind|Human_voice
+speech_noisy/fsd175232.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,5.0,Speech|Wind|Human_voice
+speech_noisy/fsd333395.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.05,Chatter|Conversation|Human_group_actions|Speech|Human_voice
+speech_noisy/fsd345325.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.827,Applause|Clapping|Speech|Human_voice|Human_group_actions|Hands
+speech_noisy/fsd187308.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,5.315,Subway_and_metro_and_underground|Speech|Shout|Human_voice|Rail_transport|Vehicle
+speech_noisy/fsd363712.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,6.24,Crowd|Conversation|Human_group_actions|Speech|Human_voice
+speech_noisy/fsd361400.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,10.403,Yell|Child_speech_and_kid_speaking|Human_group_actions|Laughter|Shout|Human_voice|Speech
+speech_noisy/fsd272492.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.824,Male_speech_and_man_speaking|Walk_and_footsteps|Speech|Human_voice
+speech_noisy/fsd69869.wav,speech_noisy,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,9.924,Female_speech_and_woman_speaking|Chatter|Conversation|Speech|Human_voice|Human_group_actions
+music_guitar_piano/fsd40440.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.648,Electric_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd183082.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.167,Acoustic_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd239810.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.25,Bass_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd382494.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.788,Piano|Keyboard_(musical)|Musical_instrument|Music
+music_guitar_piano/fsd12757.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.0,Piano|Keyboard_(musical)|Musical_instrument|Music
+music_guitar_piano/fsd410643.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,8.33,Keyboard_(musical)|Musical_instrument|Music
+music_guitar_piano/fsd415430.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.23,Harp|Musical_instrument|Music
+music_guitar_piano/fsd381470.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.907,Keyboard_(musical)|Musical_instrument|Music
+music_guitar_piano/fsd318031.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.159,Organ|Keyboard_(musical)|Musical_instrument|Music
+music_guitar_piano/fsd239707.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.25,Bass_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd252465.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,8.02,Acoustic_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd363689.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.177,Piano|Keyboard_(musical)|Musical_instrument|Music
+music_guitar_piano/fsd183792.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.167,Acoustic_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd58099.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,5.328,Acoustic_guitar|Strum|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd239672.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.25,Bass_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd239775.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.25,Bass_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd193053.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.241,Keyboard_(musical)|Musical_instrument|Music
+music_guitar_piano/fsd15715.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,7.773,Acoustic_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd40516.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.817,Electric_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd65656.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.871,Piano|Keyboard_(musical)|Musical_instrument|Music
+music_guitar_piano/fsd163014.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.662,Bass_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd12744.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.0,Piano|Keyboard_(musical)|Musical_instrument|Music
+music_guitar_piano/fsd134010.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,5.433,Electric_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_guitar_piano/fsd12791.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.0,Piano|Keyboard_(musical)|Musical_instrument|Music
+music_guitar_piano/fsd182960.wav,music_guitar_piano,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,5.208,Acoustic_guitar|Guitar|Plucked_string_instrument|Musical_instrument|Music
+music_percussive/fsd136037.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.167,Crash_cymbal|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd426040.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,7.5,Drum|Drum_kit|Percussion|Musical_instrument|Music
+music_percussive/fsd135987.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.167,Crash_cymbal|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd138717.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.167,Hi-hat|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd216759.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.304,Marimba_and_xylophone|Mallet_percussion|Percussion|Musical_instrument|Music
+music_percussive/fsd176993.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.651,Snare_drum|Drum|Percussion|Musical_instrument|Music
+music_percussive/fsd102501.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.692,Drum_kit|Percussion|Musical_instrument|Music
+music_percussive/fsd58622.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,5.352,Drum_kit|Percussion|Musical_instrument|Music
+music_percussive/fsd199447.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,10.944,Rattle_(instrument)|Percussion|Musical_instrument|Music
+music_percussive/fsd216753.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,11.735,Marimba_and_xylophone|Mallet_percussion|Percussion|Musical_instrument|Music
+music_percussive/fsd136181.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.167,Crash_cymbal|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd137509.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.125,Hi-hat|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd13203.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,3.586,Snare_drum|Drum|Percussion|Musical_instrument|Music
+music_percussive/fsd375707.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,6.926,Rattle_(instrument)|Percussion|Musical_instrument|Music
+music_percussive/fsd199824.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,11.286,Rattle_(instrument)|Percussion|Musical_instrument|Music
+music_percussive/fsd109366.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.252,Marimba_and_xylophone|Mallet_percussion|Percussion|Musical_instrument|Music
+music_percussive/fsd152680.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.068,Crash_cymbal|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd137486.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.125,Hi-hat|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd137677.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.125,Hi-hat|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd81652.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.005,Snare_drum|Drum|Percussion|Musical_instrument|Music
+music_percussive/fsd91154.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.569,Cowbell|Bell
+music_percussive/fsd103173.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,3.721,Hi-hat|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd135955.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.167,Crash_cymbal|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd375518.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,8.04,Crash_cymbal|Cymbal|Percussion|Musical_instrument|Music
+music_percussive/fsd353700.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,6.0,Drum_kit|Percussion|Musical_instrument|Music
+music_percussive/fsd426037.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,7.5,Drum_kit|Percussion|Musical_instrument|Music
+music_percussive/fsd323233.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.486,Drum_kit|Percussion|Musical_instrument|Music
+music_percussive/fsd86362.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,5.252,Rattle_(instrument)|Percussion|Musical_instrument|Music
+music_percussive/fsd348910.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,3.457,Glockenspiel|Mallet_percussion|Percussion|Musical_instrument|Music
+music_percussive/fsd20462.wav,music_percussive,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,8.0,Drum_kit|Percussion|Musical_instrument|Music
+music_wind_brass_vocal/fsd355211.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.124,Wind_instrument_and_woodwind_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd116897.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,7.62,Harmonica|Musical_instrument|Music
+music_wind_brass_vocal/fsd330765.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.816,Harmonica|Musical_instrument|Music
+music_wind_brass_vocal/fsd373671.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,6.617,Wind_instrument_and_woodwind_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd372805.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.89,Bowed_string_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd357673.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,7.779,Trumpet|Brass_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd354966.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,7.651,Wind_instrument_and_woodwind_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd354201.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.328,Bowed_string_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd359851.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.0,Wind_instrument_and_woodwind_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd355010.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,7.998,Wind_instrument_and_woodwind_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd247273.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.125,Trumpet|Brass_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd357504.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,5.25,Trumpet|Brass_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd247519.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.818,Bowed_string_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd354588.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,9.0,Wind_instrument_and_woodwind_instrument|Musical_instrument|Music
+music_wind_brass_vocal/fsd248923.wav,music_wind_brass_vocal,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.706,Wind_instrument_and_woodwind_instrument|Musical_instrument|Music
+hf_natural/fsd366419.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.114,Chirp_and_tweet|Bird_vocalization_and_bird_call_and_bird_song|Bird|Wild_animals|Animal
+hf_natural/fsd341411.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.29,Coin_(dropping)|Glass|Domestic_sounds_and_home_sounds
+hf_natural/fsd235496.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.763,Tap|Glass
+hf_natural/fsd144017.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,10.406,Buzz|Insect|Wild_animals|Animal
+hf_natural/fsd9185.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,5.074,Keys_jangling|Domestic_sounds_and_home_sounds
+hf_natural/fsd91507.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,7.333,Zipper_(clothing)|Domestic_sounds_and_home_sounds
+hf_natural/fsd92019.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,7.307,Shatter|Glass
+hf_natural/fsd339648.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.225,Chink_and_clink|Glass
+hf_natural/fsd132918.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.105,Squeak|Dishes_and_pots_and_pans|Trickle_and_dribble|Glass|Domestic_sounds_and_home_sounds|Pour|Liquid
+hf_natural/fsd377513.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,7.248,Cutlery_and_silverware|Domestic_sounds_and_home_sounds
+hf_natural/fsd179265.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.83,Shatter|Glass
+hf_natural/fsd416285.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.217,Chink_and_clink|Glass
+hf_natural/fsd404510.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.1,Zipper_(clothing)|Domestic_sounds_and_home_sounds
+hf_natural/fsd233785.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,11.755,Insect|Wild_animals|Animal
+hf_natural/fsd341855.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,5.948,Cricket|Insect|Wild_animals|Animal
+hf_natural/fsd250705.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.265,Zipper_(clothing)|Domestic_sounds_and_home_sounds
+hf_natural/fsd257032.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,11.468,Scissors|Domestic_sounds_and_home_sounds
+hf_natural/fsd132951.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,8.39,Scissors|Domestic_sounds_and_home_sounds
+hf_natural/fsd33549.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.002,Bird_vocalization_and_bird_call_and_bird_song|Singing|Bird|Wild_animals|Animal|Human_voice
+hf_natural/fsd27701.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.523,Glass
+hf_natural/fsd51038.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.831,Tap|Glass
+hf_natural/fsd257551.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,8.007,Wind_chime|Chime|Bell
+hf_natural/fsd233286.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.619,Coin_(dropping)|Singing|Domestic_sounds_and_home_sounds|Human_voice
+hf_natural/fsd389739.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.228,Chirp_and_tweet|Bird_vocalization_and_bird_call_and_bird_song|Bird|Wild_animals|Animal
+hf_natural/fsd410783.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,3.634,Coin_(dropping)|Domestic_sounds_and_home_sounds
+hf_natural/fsd29888.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.826,Cutlery_and_silverware|Domestic_sounds_and_home_sounds
+hf_natural/fsd268586.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,5.352,Glass
+hf_natural/fsd32244.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.8,Cricket|Insect|Wild_animals|Animal
+hf_natural/fsd187265.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.759,Zipper_(clothing)|Domestic_sounds_and_home_sounds
+hf_natural/fsd418520.wav,hf_natural,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.277,Cutlery_and_silverware|Dishes_and_pots_and_pans|Domestic_sounds_and_home_sounds
+environmental/fsd432465.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,6.713,Walk_and_footsteps|Run|Bell
+environmental/fsd202150.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,8.64,Stream|Bird_vocalization_and_bird_call_and_bird_song|Water|Bird|Wild_animals|Animal
+environmental/fsd110352.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,7.052,Stream|Water
+environmental/fsd105304.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,11.889,Thunder|Thunderstorm
+environmental/fsd430213.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,5.375,Walk_and_footsteps
+environmental/fsd380806.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,7.0,Wind|Bird|Wild_animals|Animal
+environmental/fsd171089.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.208,Fire
+environmental/fsd350811.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.972,Drip|Rain|Water|Liquid
+environmental/fsd422872.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,6.136,Raindrop|Rain|Water
+environmental/fsd380807.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.66,Sneeze|Chatter|Wind|Respiratory_sounds|Human_group_actions
+environmental/fsd265034.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,10.0,Crackle|Fire
+environmental/fsd202005.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.692,Sink_(filling_or_washing)|Water_tap_and_faucet|Splash_and_splatter|Liquid|Domestic_sounds_and_home_sounds
+environmental/fsd57654.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,3.943,Wind
+environmental/fsd392497.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,6.0,Wind
+environmental/fsd166703.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,7.328,Gull_and_seagull|Wind|Bird|Wild_animals|Animal
+environmental/fsd135866.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.358,Boiling|Liquid
+environmental/fsd267245.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.158,Waves_and_surf|Ocean|Water
+environmental/fsd38245.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,10.0,Thunder|Thunderstorm
+environmental/fsd135676.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,3.044,Crackle|Fire
+environmental/fsd151904.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.208,Water_tap_and_faucet|Domestic_sounds_and_home_sounds
+environmental/fsd323426.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,7.679,Rain|Water
+environmental/fsd244926.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,3.857,Fire
+environmental/fsd238798.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.413,Wind
+environmental/fsd337735.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,6.829,Crackle
+environmental/fsd380494.wav,environmental,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,7.758,Fire
+electronic_device/fsd418896.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.002,Clock|Mechanisms
+electronic_device/fsd266592.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.8,Buzz|Insect|Wild_animals|Animal
+electronic_device/fsd370892.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.233,Camera|Mechanisms
+electronic_device/fsd56342.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,2.4,Clock|Mechanisms
+electronic_device/fsd259927.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.239,Telephone|Alarm
+electronic_device/fsd102434.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.604,Ringtone|Telephone|Alarm
+electronic_device/fsd264103.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.068,Camera|Mechanisms
+electronic_device/fsd326291.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.063,Computer_keyboard|Typing|Domestic_sounds_and_home_sounds
+electronic_device/fsd333579.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.4,Computer_keyboard|Typing|Domestic_sounds_and_home_sounds
+electronic_device/fsd361153.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.273,Telephone|Alarm
+electronic_device/fsd275802.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,5.837,Clock|Mechanisms
+electronic_device/fsd404533.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.485,Hiss
+electronic_device/fsd321582.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.856,Tick-tock|Clock|Mechanisms
+electronic_device/fsd19880.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,10.389,Telephone|Alarm
+electronic_device/fsd340717.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.566,Engine|Mechanisms
+electronic_device/fsd396137.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,9.172,Alarm|Car|Motor_vehicle_(road)|Vehicle
+electronic_device/fsd28008.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,11.13,Mechanisms
+electronic_device/fsd117165.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.367,Vehicle_horn_and_car_horn_and_honking|Car|Motor_vehicle_(road)|Vehicle|Alarm
+electronic_device/fsd403449.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,5.956,Alarm
+electronic_device/fsd98950.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,2.123,Telephone|Alarm
+electronic_device/fsd176859.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,6.165,Telephone|Alarm
+electronic_device/fsd219506.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.849,Microwave_oven|Domestic_sounds_and_home_sounds
+electronic_device/fsd204424.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.945,Alarm
+electronic_device/fsd201611.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,4.082,Siren|Alarm
+electronic_device/fsd167536.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,6.922,Ringtone|Telephone|Alarm
+electronic_device/fsd138277.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC0-1.0,44100,8.465,Car_passing_by|Vehicle_horn_and_car_horn_and_honking|Car|Motor_vehicle_(road)|Vehicle|Alarm
+electronic_device/fsd264101.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,10.818,Camera|Mechanisms
+electronic_device/fsd66300.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.131,Telephone|Alarm
+electronic_device/fsd184000.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,3.699,Alarm|Truck|Motor_vehicle_(road)|Vehicle
+electronic_device/fsd252715.wav,electronic_device,FSD50K (Freesound) via HF Fhrozen/FSD50k,CC-BY-3.0,44100,4.609,Computer_keyboard|Typing|Domestic_sounds_and_home_sounds
+speech_clean/vctk_p247_129_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.158,"speech,studio"
+speech_clean/vctk_p251_230_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.994,"speech,studio"
+speech_clean/vctk_p251_024_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,5.678,"speech,studio"
+speech_clean/vctk_p247_246_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.522,"speech,studio"
+speech_clean/vctk_p251_003_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,6.158,"speech,studio"
+speech_clean/vctk_p334_316_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.062,"speech,studio"
+speech_clean/vctk_p251_287_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,3.054,"speech,studio"
+speech_clean/vctk_p334_075_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.158,"speech,studio"
+speech_clean/vctk_p334_071_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.414,"speech,studio"
+speech_clean/vctk_p334_111_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.066,"speech,studio"
+speech_clean/vctk_p247_322_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.574,"speech,studio"
+speech_clean/vctk_p251_113_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,3.214,"speech,studio"
+speech_clean/vctk_p251_049_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,3.086,"speech,studio"
+speech_clean/vctk_p251_023_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,9.966,"speech,studio"
+speech_clean/vctk_p247_438_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.03,"speech,studio"
+speech_clean/vctk_p251_095_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,3.406,"speech,studio"
+speech_clean/vctk_p334_203_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.254,"speech,studio"
+speech_clean/vctk_p334_032_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.318,"speech,studio"
+speech_clean/vctk_p334_324_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.094,"speech,studio"
+speech_clean/vctk_p247_418_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.702,"speech,studio"
+speech_clean/vctk_p251_017_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.798,"speech,studio"
+speech_clean/vctk_p251_022_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,5.187,"speech,studio"
+speech_clean/vctk_p247_253_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.638,"speech,studio"
+speech_clean/vctk_p251_353_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.734,"speech,studio"
+speech_clean/vctk_p251_008_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,6.03,"speech,studio"
+speech_clean/vctk_p247_176_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,3.598,"speech,studio"
+speech_clean/vctk_p326_340_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.222,"speech,studio"
+speech_clean/vctk_p251_076_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,3.246,"speech,studio"
+speech_clean/vctk_p251_176_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.734,"speech,studio"
+speech_clean/vctk_p247_011_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,5.486,"speech,studio"
+speech_clean/vctk_p251_336_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.702,"speech,studio"
+speech_clean/vctk_p334_015_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,3.886,"speech,studio"
+speech_clean/vctk_p247_199_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.414,"speech,studio"
+speech_clean/vctk_p251_316_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.03,"speech,studio"
+speech_clean/vctk_p247_178_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.542,"speech,studio"
+speech_clean/vctk_p334_007_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,3.374,"speech,studio"
+speech_clean/vctk_p247_144_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.254,"speech,studio"
+speech_clean/vctk_p251_319_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,3.694,"speech,studio"
+speech_clean/vctk_p334_066_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,2.062,"speech,studio"
+speech_clean/vctk_p251_284_mic1.wav,speech_clean,VCTK via HF jspaulsen/vctk,CC-BY-4.0,48000,3.322,"speech,studio"
+environmental/esc_1-21189-A-10.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,rain
+environmental/esc_1-56311-A-10.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,rain
+environmental/esc_2-102852-A-11.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,sea_waves
+environmental/esc_1-61252-A-11.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,sea_waves
+environmental/esc_1-17150-A-12.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,crackling_fire
+environmental/esc_3-120644-A-12.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,crackling_fire
+environmental/esc_1-51035-A-16.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,wind
+environmental/esc_2-104952-A-16.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,wind
+environmental/esc_3-103599-B-25.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,footsteps
+environmental/esc_2-209476-A-25.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,footsteps
+environmental/esc_1-101296-A-19.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,thunderstorm
+environmental/esc_3-103051-B-19.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,thunderstorm
+hf_natural/esc_2-110613-A-13.wav,hf_natural,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,crickets
+hf_natural/esc_2-80844-A-13.wav,hf_natural,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,crickets
+hf_natural/esc_1-100038-A-14.wav,hf_natural,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,chirping_birds
+hf_natural/esc_1-54918-A-14.wav,hf_natural,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,chirping_birds
+environmental/esc_1-50623-A-15.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,water_drops
+environmental/esc_2-139748-B-15.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,water_drops
+environmental/esc_2-102414-F-17.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,pouring_water
+environmental/esc_2-102414-E-17.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,pouring_water
+environmental/esc_2-106015-B-44.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,engine
+environmental/esc_2-107228-A-44.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,engine
+environmental/esc_3-138212-A-45.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,train
+environmental/esc_1-54065-A-45.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,train
+environmental/esc_2-37806-B-40.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,helicopter
+environmental/esc_2-188822-B-40.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,helicopter
+environmental/esc_3-118657-B-41.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,chainsaw
+environmental/esc_2-77945-A-41.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,chainsaw
+environmental/esc_3-115387-B-47.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,airplane
+environmental/esc_2-98866-A-47.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,airplane
+hf_natural/esc_3-111102-B-46.wav,hf_natural,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,church_bells
+hf_natural/esc_2-57191-A-46.wav,hf_natural,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,church_bells
+electronic_device/esc_2-119748-A-38.wav,electronic_device,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,clock_tick
+electronic_device/esc_1-35687-A-38.wav,electronic_device,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,clock_tick
+electronic_device/esc_3-144120-A-32.wav,electronic_device,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,keyboard_typing
+electronic_device/esc_1-94231-A-32.wav,electronic_device,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,keyboard_typing
+electronic_device/esc_1-99958-A-31.wav,electronic_device,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,mouse_click
+electronic_device/esc_1-85123-A-31.wav,electronic_device,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,mouse_click
+environmental/esc_2-122820-B-36.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,vacuum_cleaner
+environmental/esc_2-106072-A-36.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,vacuum_cleaner
+environmental/esc_1-32373-A-35.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,washing_machine
+environmental/esc_1-23996-B-35.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,washing_machine
+hf_natural/esc_1-977-A-39.wav,hf_natural,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,glass_breaking
+hf_natural/esc_1-85184-A-39.wav,hf_natural,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,glass_breaking
+environmental/esc_1-26188-A-30.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,door_wood_knock
+environmental/esc_3-151089-A-30.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,door_wood_knock
+environmental/esc_2-85471-A-34.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,can_opening
+environmental/esc_1-60676-A-34.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,can_opening
+electronic_device/esc_3-132340-A-37.wav,electronic_device,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,clock_alarm
+electronic_device/esc_3-148297-A-37.wav,electronic_device,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,clock_alarm
+environmental/esc_1-18074-A-6.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,hen
+environmental/esc_2-120586-A-6.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,hen
+hf_natural/esc_1-17585-A-7.wav,hf_natural,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,insects
+hf_natural/esc_3-104761-B-7.wav,hf_natural,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,insects
+environmental/esc_2-32515-D-4.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,frog
+environmental/esc_1-18757-A-4.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,frog
+environmental/esc_1-110389-A-0.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,dog
+environmental/esc_2-118964-A-0.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,dog
+environmental/esc_1-34094-A-5.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,cat
+environmental/esc_2-110010-A-5.wav,environmental,ESC-50 via HF ashraq/esc50,CC-BY-NC-3.0,44100,5.0,cat
+music_full_mix/musdb_BKS__Bulldozer_0.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:BKS - Bulldozer
+music_full_mix/musdb_BKS__Bulldozer_1.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:BKS - Bulldozer
+music_full_mix/musdb_Angels_In_Amplifiers__I'm_Alright_0.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:Angels In Amplifiers - I'm Alright
+music_full_mix/musdb_Angels_In_Amplifiers__I'm_Alright_1.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:Angels In Amplifiers - I'm Alright
+music_full_mix/musdb_Secretariat__Borderline_0.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:Secretariat - Borderline
+music_full_mix/musdb_Secretariat__Borderline_1.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:Secretariat - Borderline
+music_full_mix/musdb_Girls_Under_Glass__We_Feel_Alright_0.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:Girls Under Glass - We Feel Alright
+music_full_mix/musdb_Girls_Under_Glass__We_Feel_Alright_1.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:Girls Under Glass - We Feel Alright
+music_full_mix/musdb_The_Mountaineering_Club__Mallory_0.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:The Mountaineering Club - Mallory
+music_full_mix/musdb_The_Mountaineering_Club__Mallory_1.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:The Mountaineering Club - Mallory
+music_full_mix/musdb_Skelpolu__Resurrection_0.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:Skelpolu - Resurrection
+music_full_mix/musdb_Skelpolu__Resurrection_1.wav,music_full_mix,MUSDB18-HQ via HF roro128/musdb18-hq-flac,CC-BY-NC-SA-4.0,44100,10.0,mixture:Skelpolu - Resurrection
+speech_noisy_mix/mix_p247_129_mic1_rain.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.158,speech+rain
+speech_noisy_mix/mix_p251_230_mic1_rain.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.994,speech+rain
+speech_noisy_mix/mix_p251_024_mic1_sea_waves.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,5.678,speech+sea_waves
+speech_noisy_mix/mix_p247_246_mic1_sea_waves.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.522,speech+sea_waves
+speech_noisy_mix/mix_p251_003_mic1_crackling_fire.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,6.158,speech+crackling_fire
+speech_noisy_mix/mix_p334_316_mic1_crackling_fire.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.062,speech+crackling_fire
+speech_noisy_mix/mix_p251_287_mic1_wind.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,3.054,speech+wind
+speech_noisy_mix/mix_p334_075_mic1_wind.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.158,speech+wind
+speech_noisy_mix/mix_p334_071_mic1_engine.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.414,speech+engine
+speech_noisy_mix/mix_p334_111_mic1_engine.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.066,speech+engine
+speech_noisy_mix/mix_p247_322_mic1_train.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.574,speech+train
+speech_noisy_mix/mix_p251_113_mic1_train.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,3.214,speech+train
+speech_noisy_mix/mix_p251_049_mic1_airplane.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,3.086,speech+airplane
+speech_noisy_mix/mix_p251_023_mic1_airplane.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,9.966,speech+airplane
+speech_noisy_mix/mix_p247_438_mic1_vacuum_cleaner.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.03,speech+vacuum_cleaner
+speech_noisy_mix/mix_p251_095_mic1_vacuum_cleaner.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,3.406,speech+vacuum_cleaner
+speech_noisy_mix/mix_p334_203_mic1_rain.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.254,speech+rain
+speech_noisy_mix/mix_p334_032_mic1_rain.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.318,speech+rain
+speech_noisy_mix/mix_p334_324_mic1_sea_waves.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.094,speech+sea_waves
+speech_noisy_mix/mix_p247_418_mic1_sea_waves.wav,speech_noisy_mix,"VCTK speech + ESC-50 noise (mixed here, 10 dB SNR)",CC-BY-4.0 + CC-BY-NC-3.0,44100,2.702,speech+sea_waves

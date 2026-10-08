@@ -23,7 +23,8 @@ def render_text(report: Report, source: str = "") -> str:
     )
     lines.append(f"Duration    : {report.duration_sec:.2f} s")
     mark = _VERDICT_MARK.get(report.verdict, "")
-    lines.append(f"Verdict     : {mark} {report.verdict}  (risk {report.overall_risk:.2f})")
+    where = f" at {report.start_sec:.1f} s" if report.start_sec else ""
+    lines.append(f"Verdict     : {mark} {report.verdict}  (risk {report.overall_risk:.2f}){where}")
     lines.append("")
     lines.append("Detectors:")
     for f in report.findings:

@@ -31,7 +31,12 @@ def to_float_mono(data: np.ndarray) -> np.ndarray:
     if data.ndim > 1:
         data = data.mean(axis=1)
 
-    if np.issubdtype(data.dtype, np.integer):
+    if np.issubdtype(data.dtype, np.unsignedinteger):
+        # WAV stores 8-bit PCM unsigned with silence at the mid-point.
+        info = np.iinfo(data.dtype)
+        mid = (info.max + 1) / 2.0
+        data = (data.astype(np.float64) - mid) / mid
+    elif np.issubdtype(data.dtype, np.integer):
         info = np.iinfo(data.dtype)
         # Use the larger magnitude of the signed range as the normaliser.
         scale = float(max(abs(info.min), abs(info.max)))

@@ -4,23 +4,60 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "echoguard"
-version = "0.1.0"
+version = "0.2.0"
 description = "Baseline open-source detector for inaudible / injected voice-command attacks"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [{ name = "EchoGuard contributors" }]
 keywords = ["security", "voice-assistant", "ultrasonic", "dolphinattack", "defense", "detection"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Multimedia :: Sound/Audio :: Analysis",
+]
 dependencies = [
-    "numpy>=1.22",
-    "scipy>=1.8",
+    "numpy>=1.22,<3",
+    "scipy>=1.8,<2",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+spoof = ["scikit-learn>=1.1,<2"]
+bench = ["scikit-learn>=1.1,<2", "soundfile>=0.12", "pandas>=1.5", "huggingface_hub>=0.20", "datasets>=2.14"]
+capture = ["sounddevice>=0.4"]
+dev = ["pytest>=7.0", "ruff>=0.4", "mypy>=1.8", "scikit-learn>=1.1,<2"]
+
+[project.urls]
+Homepage = "https://github.com/swarnali2k17/echoguard"
+Issues = "https://github.com/swarnali2k17/echoguard/issues"
 
 [project.scripts]
 echoguard = "echoguard.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["echoguard*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 110
+target-version = "py39"
+extend-exclude = ["fixtures", "benchmark/baseband_study"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "UP"]
+ignore = ["E501", "UP007", "UP006", "UP035", "UP045", "B905"]
+
+[tool.ruff.lint.per-file-ignores]
+"benchmark/*" = ["E702"]
+"examples/*" = ["E702"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+warn_unused_ignores = false

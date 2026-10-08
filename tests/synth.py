@@ -30,12 +30,19 @@ def benign_speechlike(duration: float = 1.0, sample_rate: int = 48_000, seed: in
 
 
 def out_of_band(duration: float = 1.0, sample_rate: int = 48_000, tone_hz: float = 20_000.0,
-                seed: int = 2) -> np.ndarray:
-    """Benign-looking base plus strong energy above 18 kHz (injection signature)."""
+                seed: int = 2, mod_depth: float = 0.9) -> np.ndarray:
+    """Benign-looking base plus a strong carrier above 18 kHz (injection signature).
+
+    The carrier is AM-modulated by speech-bandwidth noise (150 Hz-4 kHz), as an
+    injected command would modulate it, so it carries sidebands. A bare tone
+    is a beacon, and the carrier detector treats it as one.
+    """
     base = _bandlimited_noise(duration, sample_rate, 150.0, 4_000.0, seed) * 0.3
     n = int(duration * sample_rate)
     t = np.arange(n) / sample_rate
-    tone = np.sin(2 * np.pi * tone_hz * t)
+    mod = _bandlimited_noise(duration, sample_rate, 150.0, 4_000.0, seed + 1000)
+    mod = mod / (np.max(np.abs(mod)) or 1.0)
+    tone = (1.0 + mod_depth * mod) * np.sin(2 * np.pi * tone_hz * t)
     return _normalise(base + tone)
 
 

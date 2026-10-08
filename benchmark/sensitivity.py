@@ -40,11 +40,18 @@ def _speech_base(seed):
 
 
 def _probe(alpha, fc, seed):
-    """Benign speech-band base + a high-frequency carrier scaled by alpha."""
+    """Benign speech-band base + a high-frequency carrier scaled by alpha.
+
+    The carrier is AM-modulated (depth 0.9) by a speech-bandwidth signal, as an
+    injected command would modulate it. An unmodulated tone is a beacon, not an
+    attack, and since v0.2.0 the carrier detector treats it as one.
+    """
     base = _speech_base(seed)
     base = base / (np.max(np.abs(base)) or 1.0)
+    mod = _speech_base(seed + 1000)
+    mod = mod / (np.max(np.abs(mod)) or 1.0)
     t = np.arange(int(DURATION * SR)) / SR
-    carrier = np.sin(2 * np.pi * fc * t)
+    carrier = (1.0 + 0.9 * mod) * np.sin(2 * np.pi * fc * t)
     sig = base + alpha * carrier
     return (sig / (np.max(np.abs(sig)) or 1.0) * 0.9).astype(np.float32)
 

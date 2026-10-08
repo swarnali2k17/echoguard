@@ -4,13 +4,21 @@ Per-frame spectral descriptors known to differ between genuine speech and
 replayed/synthetic speech (centroid, bandwidth, roll-off, flatness, band-energy
 ratios, zero-crossing rate), aggregated to a fixed-length mean+std vector.
 This is a transparent baseline feature set, not a learned front-end.
+
+Every clip is resampled to FEATURE_RATE first. The descriptors are absolute-
+frequency quantities, so without this a corpus whose genuine and spoofed
+clips come at different sample rates is separable by the rate alone - the
+confound documented in PILOT_SPOOF.md.
 """
 
 from __future__ import annotations
 
 import numpy as np
+from scipy import signal as sps
 
-_trapz = getattr(np, "trapezoid", None) or getattr(np, "trapz")
+from ..audio import to_float_mono
+
+FEATURE_RATE = 16_000
 
 
 def _frames(sig, sr, win_ms=25.0, hop_ms=10.0):
@@ -35,16 +43,31 @@ def _frame_descriptors(frame, sr):
     flatness = float(np.exp(np.log(spec).mean()) / spec.mean())
     zcr = float(np.mean(np.abs(np.diff(np.sign(frame))) > 0))
     nyq = sr / 2
+
     def band(lo, hi):
         m = (freqs >= lo) & (freqs < hi)
         return float(power[m].sum() / total) if m.any() else 0.0
+
     return [centroid, bandwidth, rolloff, flatness, zcr,
             band(0, 1000), band(1000, 4000), band(4000, min(8000, nyq))]
 
 
-def extract_features(sig: np.ndarray, sr: int) -> np.ndarray:
-    """Return a fixed-length feature vector (mean+std of per-frame descriptors)."""
-    sig = np.asarray(sig, dtype=np.float64)
+def extract_features(sig, sr: int) -> np.ndarray:
+    """Return a fixed-length feature vector (mean+std of per-frame descriptors).
+
+    Accepts mono or multi-channel input at any sample rate; resamples to 16 kHz.
+    Raises ValueError on empty or non-finite input.
+    """
+    sig = to_float_mono(np.asarray(sig)).astype(np.float64)
+    if sig.size == 0:
+        raise ValueError("empty signal")
+    if not np.all(np.isfinite(sig)):
+        raise ValueError("signal contains NaN or infinite samples")
+    sr = int(sr)
+    if sr != FEATURE_RATE:
+        g = np.gcd(sr, FEATURE_RATE)
+        sig = sps.resample_poly(sig, FEATURE_RATE // g, sr // g)
+        sr = FEATURE_RATE
     peak = np.max(np.abs(sig)) if sig.size else 0.0
     if peak > 0:
         sig = sig / peak

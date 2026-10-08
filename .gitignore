@@ -32,10 +32,10 @@ fixtures/
 benchmark/corpus_*/
 benchmark/data/
 
-# --- generated benchmark artefacts ---
-*.csv
-*.png
+# --- generated benchmark artefacts (the committed ones under benchmark/ are the published results) ---
 *.npz
+/fixtures/**/*.csv
+/fixtures/**/*.png
 
 # --- large media / archives ---
 *.mp4

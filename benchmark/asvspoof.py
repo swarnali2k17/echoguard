@@ -78,17 +78,27 @@ def selftest(n_per_class=60):
 
 # ---------- real ASVspoof mode ----------
 def _read_protocol(path):
-    """Return list of (filename, label) where label 1=spoof, 0=bonafide."""
+    """Return list of (filename, label) where label 1=spoof, 0=bonafide.
+
+    ASVspoof 2019/2021 protocol lines look like
+        LA_0079 LA_T_1138215 - - bonafide
+        LA_0079 LA_T_1271820 - A01 spoof
+    i.e. speaker-id, utterance-id, (sub-fields), key. The utterance id is the
+    SECOND token; the first is the speaker. ASVspoof 5 uses more columns but
+    keeps speaker first, utterance second, key as 'bonafide'/'spoof'.
+    """
     rows = []
     with open(path) as f:
         for line in f:
             parts = line.split()
-            if not parts:
+            if len(parts) < 2:
                 continue
-            fname = next((p for p in parts if p.lower().endswith((".flac", ".wav")) or p.startswith(("LA_", "PA_", "DF_"))), parts[1] if len(parts) > 1 else parts[0])
-            label = 1 if "spoof" in parts else (0 if "bonafide" in parts else None)
+            lowered = [p.lower() for p in parts]
+            label = 1 if "spoof" in lowered else (0 if "bonafide" in lowered else None)
             if label is None:
                 continue
+            explicit = next((p for p in parts if p.lower().endswith((".flac", ".wav"))), None)
+            fname = explicit if explicit else parts[1]
             rows.append((fname, label))
     return rows
 
@@ -137,10 +147,15 @@ def main():
     ap.add_argument("--train"); ap.add_argument("--eval"); ap.add_argument("--audio")
     ap.add_argument("--limit", type=int, default=None)
     args = ap.parse_args()
-    if args.selftest or not (args.train and args.eval and args.audio):
+    real_args = (args.train, args.eval, args.audio)
+    if args.selftest:
         selftest()
-    else:
+    elif all(real_args):
         real_mode(args.train, args.eval, args.audio, args.limit)
+    elif any(real_args):
+        ap.error("real mode needs all of --train, --eval and --audio")
+    else:
+        selftest()
 
 
 if __name__ == "__main__":

@@ -77,7 +77,7 @@ def run(n_shards=2, per_class=900, seed=0):
     Xev, yev = _featurize(take(False, per_class // 2))
     det = SpoofDetector().fit(Xtr, ytr)
     eer = equal_error_rate(det.score(Xev), yev)
-    print(f"ASVspoof 2019 LA (speaker-disjoint, balanced subset, baseline feature+LR)")
+    print("ASVspoof 2019 LA (speaker-disjoint, balanced subset, baseline feature+LR)")
     print(f"  speakers: {len(train_spk)} train / {len(speakers)-len(train_spk)} eval")
     print(f"  clips:    {len(ytr)} train / {len(yev)} eval")
     print(f"  EER = {eer*100:.1f}%")

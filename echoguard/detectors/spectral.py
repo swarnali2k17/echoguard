@@ -5,15 +5,13 @@ human speech at all? Genuine voice commands roll off their energy well below
 8 kHz. A clip whose 99% energy roll-off sits high in the band is inconsistent
 with a human speaker and is a generic indicator of injected, synthetic, or
 hidden-audio content. This is a coarse screen that complements the two
-targeted detectors.
+targeted detectors; it is reported as context and does not drive the verdict.
 """
 
 from __future__ import annotations
 
-import numpy as np
-
 from .base import Detector, Finding, clip01
-from ._dsp import welch_psd, rolloff_frequency
+from ._dsp import Spectrum, rolloff_frequency
 
 SPEECH_ROLLOFF_HZ = 8_000.0   # at or below: normal speech
 ANOMALY_ROLLOFF_HZ = 16_000.0  # at or above: clearly not speech
@@ -22,9 +20,8 @@ ANOMALY_ROLLOFF_HZ = 16_000.0  # at or above: clearly not speech
 class SpectralProfileDetector(Detector):
     name = "spectral_profile"
 
-    def analyze(self, signal: np.ndarray, sample_rate: int) -> Finding:
-        freqs, psd = welch_psd(signal, sample_rate)
-        rolloff = rolloff_frequency(freqs, psd, fraction=0.99)
+    def analyze_spectrum(self, spectrum: Spectrum) -> Finding:
+        rolloff = rolloff_frequency(spectrum.freqs, spectrum.psd, fraction=0.99)
 
         # Map roll-off between the speech and anomaly anchors onto [0, 1].
         span = ANOMALY_ROLLOFF_HZ - SPEECH_ROLLOFF_HZ
@@ -46,5 +43,5 @@ class SpectralProfileDetector(Detector):
             name=self.name,
             risk=risk,
             detail=detail,
-            evidence={"rolloff_99_hz": rolloff},
+            evidence={"assessable": True, "rolloff_99_hz": float(rolloff)},
         )
