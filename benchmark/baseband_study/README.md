@@ -6,9 +6,11 @@ Can an inaudible-command injection be detected from what a phone actually stores
 
 - `features.py`: 22 features in six groups: ghost (sub-20/100 Hz energy, 2–20 Hz vs speech band), aliased carrier line (prominence, frame stability, sideband ratio), envelope modulation spectrum, bicoherence, harmonicity (HNR, CPP, voiced fraction), spectral flatness/entropy and 2nd-harmonic distortion.
 - `gen_dataset.py`: 600 attack + 600 condition-matched benign clips, synthesised at 192 kHz and captured at 48 and 16 kHz through the ADC model; carriers 18–40 kHz, AM/DSB-SC/SSB, mic a2 0.03–0.2, SNR 10–35 dB; real VCTK speech as room audio and, in one variant, as the modulator. Needs the 40 VCTK clips from `benchmark/real_audio/`.
-- `run_eval.py`: per-feature AUC, logistic-regression and gradient-boosting cross-validation, cross-carrier and cross-a2 transfer.
-- Results: `per_feature_auc.csv`, `per_feature_auc_tone.csv` (real-speech modulator), `feature_importance.csv`, `fig_feature_auc.png`, `fig_psd_0_300.png`, `fig_modspec.png`.
+- `run_eval.py`: per-feature AUC, logistic-regression and gradient-boosting cross-validation, cross-carrier and cross-a2 transfer. The chain includes four realism fixes (reverb DRR, device noise floor, 10 Hz DC blocker, level/AGC artefact exclusion) — without them a *fake* AUC-0.92 ghost cue appears (reverb-onset ramp + clip level); see `BENCHMARK_REPORT.md` §7a.
+- Results: `per_feature_auc.csv`, `per_feature_auc_tone.csv` (real-speech modulator), `feature_importance.csv`, `results.json`, `results_tone.json` (combined-model CV AUC/EER/false-alarms), `fig_feature_auc.png`, `fig_psd_0_300.png`, `fig_modspec.png`.
 - `ghost_real.csv`, `line_real16k.csv`: the ghost and aliased-line features measured on the 307 real benign clips and the 2,934 real DolphinAttack captures. These are the numbers that show the synthetic separation does not transfer.
+
+After the realism fixes, no single feature exceeds AUC 0.77 (0.67 for real-speech-modulated attacks), and the best combined model (0.94–0.96 AUC) still flags 33–53% of real speech at a 95%-detection threshold — not a usable operating point, and largely a level/floor effect that real AGC would erase.
 
 ## `oneclass/` — benign-only anomaly model on real audio
 
