@@ -136,22 +136,38 @@ EchoGuard v0.2.0 is a clean, fast, quiet screen for high-rate lab captures that 
 
 **As-of:** 2026-10-08. Scripts and raw outputs in `benchmark/baseband_study/`.
 
-The plan was a detector for what survives a phone's capture chain: the demodulated residue in 0–8 kHz. Two studies were run. The first measured 22 candidate features on 1,200 ADC-captured synthetic clips (600 attack, 600 condition-matched benign, at 48 and 16 kHz; carriers 18–40 kHz; AM, DSB-SC and SSB; real VCTK speech as room audio and, in one variant, as the modulator). The second asked whether any of it holds on real recordings.
+The plan was a detector for what survives a phone's capture chain: the demodulated residue in 0–8 kHz. Two studies were run. The first measured candidate features on ADC-captured synthetic clips (attack vs condition-matched benign, at 48 and 16 kHz; carriers 18–40 kHz; AM, DSB-SC and SSB; real VCTK speech as room audio and, in one variant, as the modulator). The second asked whether any of it holds on real recordings. The scripts are in `benchmark/baseband_study/synthetic/`.
 
-### 7a. On synthetic data, one cue dominates
+### 7a. On synthetic data, the apparent cue is largely a simulator artefact
 
-| Feature group | AUC at 48 kHz | AUC at 16 kHz |
+A first pass reported a "ghost" feature (2–20 Hz energy vs the speech band) at AUC 0.92 — a near-perfect separator. It did not survive scrutiny. Four properties of the simulator, not of the attack, were producing it, and each was fixed:
+
+1. **Reverb gain.** The generator's reverb tail is unnormalised noise × decay; at 192 kHz it ran ~18 dB hotter than the direct path and, convolved with the x² DC offset of a strong carrier, produced a large low-frequency onset ramp — a fake ghost. Fixed to a DRR-scaled tail, with the first 0.5 s (reverb transient) discarded.
+2. **Noise floor.** The generator scales noise to the audible content, so a tone-only clip was unphysically clean. A fixed device self-noise floor (−60 dBFS white + −55 dBFS rumble) was added to every clip.
+3. **AC coupling.** A 10 Hz DC blocker was added after the ADC, as a real codec has, and a genuine "quiet room" benign kind (the generator's "silence" is normalised to full scale).
+4. **Level.** Because the generator normalises the mic input to full scale with the carrier present, the attack baseband lands ~20 dB below benign content. The absolute-level feature scored AUC 0.14 (0.86 inverted) — a gain/AGC artefact — and is excluded.
+
+With those fixed, **no single physics feature exceeds AUC 0.77**, and for attacks whose modulator is real speech nothing exceeds 0.67 (`per_feature_auc.csv`):
+
+| Feature | 48 kHz (env / speech mod) | 16 kHz (env / speech mod) |
 | --- | --- | --- |
-| Ghost: 2–20 Hz energy vs 300–3400 Hz (dB) | **0.92** | **0.88** |
-| Ghost: energy fraction below 20 Hz | 0.70 | 0.91 |
-| Aliased carrier line (prominence, stability) | 0.72 | 0.45 (none) |
-| Envelope modulation spectrum, envelope-squared correlation | 0.41–0.52 | 0.42–0.53 |
-| Bicoherence (quadratic phase coupling) | 0.48–0.53 | 0.47–0.58 |
-| Harmonicity (HNR, CPP, voiced fraction) | 0.45–0.49 | 0.43–0.49 |
+| Ghost: sub-20 Hz energy fraction | 0.50 / 0.39 | **0.81** / 0.64 |
+| Ghost: 2–20 Hz vs 300–3400 Hz | **0.76** / 0.56 | **0.77** / 0.60 |
+| Aliased line prominence / stability | 0.72 / 0.67 | 0.44 / 0.47 (none) |
+| Modulation spectrum, envelope², bicoherence, harmonicity, flatness, H2 | 0.40–0.56 | 0.40–0.58 |
 
-The "ghost" (NormDetect, USENIX 2023) is the demodulated envelope itself appearing as a 2–20 Hz waveform. On the simulator it separates attack from benign almost perfectly. Nothing else does.
+The ghost is real only for the generator's *envelope-only* attack (0.76–0.81); for a real-speech modulator (0.56–0.64) the residue is the envelope-squared term, which benign speech produces through the same microphone non-linearity anyway. It also sits where any AC-coupled codec high-pass removes it.
 
-### 7b. On real recordings, it does not transfer
+A combined gradient-boosted model over all features reaches a high headline AUC but no usable operating point (`results.json`):
+
+| Rate / model | CV AUC | EER | Benign FP at 95% TPR | Look-alike FP (tone / PSU / all) |
+| --- | --- | --- | --- | --- |
+| 48 kHz gradient boosting | 0.959 | 11.3% | 23.5% | 100% / 77% / 74% |
+| 16 kHz gradient boosting | 0.936 | 15.5% | 25.8% | 93% / 17% / 42% |
+
+At a 95%-detection threshold the model still flags **33% of real VCTK speech and 53% of speech-in-noise** (music, quiet room and synthetic speech < 13%), and almost every steady 19 kHz tone. And it does not transfer: a 48 kHz model trained on 25–40 kHz carriers is at **chance (AUC 0.50)** on 18–22 kHz, because at 48 kHz it learns the directly-in-band 18–21.6 kHz carrier line rather than any demodulation residue. The high AUC is mostly a floor/level separation of "quiet, LF-heavy, speech-poor" clips from loud speech — exactly what real AGC would erase.
+
+### 7b. On real recordings, even the surviving cue does not transfer
 
 The same ghost feature on the 307 real benign clips and the 2,934 real DolphinAttack captures (`ghost_real.csv`):
 
@@ -183,7 +199,7 @@ What the speech-only model keys on in the Pixel clips is low-band temporal varia
 
 No baseband detector can be built or validated from the data that exists. The synthetic corpus separates for a reason that real audio does not reproduce; the one real attack set has no benign recordings from the same phones, so any model trained to separate it from other benign audio learns the device. This is the same confound the anti-spoofing pilot hit and documented. The phase-2 gate is therefore not passed, and `test_adc_capture_attack_is_detected` stays xfail.
 
-The prerequisite is matched data: benign and attack recordings from the same devices, same rooms, same gain chain — NormDetect's protocol (7 distances, ~24 devices) is the reference, and even a few minutes of matched benign audio from the DolphinAttack phones would let the ADC-tone question be settled. Until then, the ghost and aliased-line cues are kept as *reported evidence* in `benchmark/baseband_study/synthetic/features.py` for scoring a partner's captures, not as verdict inputs.
+The prerequisite is matched data: benign and attack recordings from the same devices, same rooms, same gain chain — NormDetect's protocol (7 distances, ~24 devices) is the reference, and even a few minutes of matched benign audio from the DolphinAttack phones would let the ADC-tone question be settled. `docs/recording_protocol.md` and `tools/capture/` exist to collect exactly this. A real-data study should also, per §7a: (1) use a device's *measured* gradual anti-alias/decimation response rather than a steep synthetic filter; (2) record through real AGC; (3) put loud steady tones and PSU whine in the *benign* class; and (4) treat the envelope-only attack as an upper bound, not a representative attack. Until then, the ghost and aliased-line cues are kept as *reported evidence* in `benchmark/baseband_study/synthetic/features.py` for scoring a partner's captures, not as verdict inputs.
 
 ### 7f. What phase 2 did deliver: the beacon problem
 

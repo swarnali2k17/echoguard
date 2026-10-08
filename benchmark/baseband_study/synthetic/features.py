@@ -175,7 +175,7 @@ def harmonicity_features(x, fs):
     win = np.hanning(fl)
     nq = fl
     qlo, qhi = int(0.0025 * fs), int(fs / 60)
-    hnr, cpp, f0s, _voiced = [], [], [], []
+    hnr, cpp, f0s, voiced = [], [], [], []
     energies = []
     frames = [x[i:i + fl] for i in range(0, len(x) - fl, hop)]
     for fr in frames:
