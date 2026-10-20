@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "echoguard"
-version = "0.2.0"
+version = "0.3.0"
 description = "Baseline open-source detector for inaudible / injected voice-command attacks"
 readme = "README.md"
 requires-python = ">=3.9"
