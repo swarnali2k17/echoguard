@@ -6,19 +6,20 @@ Voice assistants and, increasingly, action-taking AI voice agents and wearables 
 
 EchoGuard is a first step toward closing that gap. It is **defensive only**: it inspects audio and reports risk. It does not generate attacks and ships no attack payloads.
 
-> Status: `v0.1.0` — baseline detector. This is a screening tool, not a guarantee. See [Limitations](#limitations).
+> Status: `v0.2.0` — baseline detector. This is a screening tool, not a guarantee. See [Limitations](#limitations).
 
 ## What it does
 
-Given a WAV clip, EchoGuard runs three detectors and returns a risk verdict with reasons:
+Given a WAV clip, EchoGuard runs four signal detectors and returns a risk verdict with reasons:
 
 | Detector | Looks for | Catches (class) |
 | --- | --- | --- |
 | `out_of_band_energy` | Significant energy above 18 kHz | Ultrasonic / near-ultrasound injection (DolphinAttack, NUIT) |
-| `carrier_peak` | A dominant narrowband tone high in the band | Modulated ultrasonic carriers |
+| `carrier_peak` | A dominant narrowband tone high in the band, with command sidebands beside it | Modulated ultrasonic carriers; unmodulated beacons are recognised and not flagged |
+| `near_ultrasonic_carrier` | A speech-modulated carrier at 15–18 kHz that persists for ~2 s | Near-ultrasound injection below the 18 kHz edge (SWhisper) |
 | `spectral_profile` | Energy roll-off inconsistent with human speech | Context only — reported, never drives the verdict |
 
-Each detector returns a risk in `[0, 1]` with the numbers behind its decision. The overall verdict requires **corroboration**: it is the geometric mean of `out_of_band_energy` and `carrier_peak`, so both an out-of-band energy signature *and* a narrowband carrier must be present to raise the score. `spectral_profile` is reported as context but deliberately does not drive the verdict, because on its own it fires on ordinary music and noise. See [Benchmark](#benchmark) for why.
+Each detector returns a risk in `[0, 1]` with the numbers behind its decision. The overall verdict requires **corroboration**: it is the geometric mean of `out_of_band_energy` and `carrier_peak`, so both an out-of-band energy signature *and* a narrowband carrier must be present to raise the score. A carrier at 15–18 kHz puts nothing above 18 kHz, so it is scored through its own path, which carries its own corroboration (carrier, sidebands, fluctuation in time, persistence). The verdict is the higher of the two scores. `spectral_profile` is reported as context but deliberately does not drive the verdict, because on its own it fires on ordinary music and noise. See [Benchmark](#benchmark) for why, and [`docs/detectors.md`](docs/detectors.md) for every rule and threshold.
 
 ## Install
 
@@ -154,14 +155,19 @@ The fixtures are **synthetic test signals** with particular spectral shapes (ban
 
 ## Capture matters
 
-Detecting ultrasonic and near-ultrasound energy requires a recording whose Nyquist frequency reaches into that band. A standard 16 kHz voice capture **cannot** see 18 kHz, and EchoGuard says so rather than returning a false "clear". For meaningful results, capture at **44.1 kHz or higher**.
+Detecting ultrasonic and near-ultrasound energy requires a recording whose Nyquist frequency reaches into that band. A standard 16 kHz voice capture **cannot** see 18 kHz, and EchoGuard says so rather than returning a false "clear". For meaningful results, capture at **44.1 kHz or higher**, uncompressed.
+
+The sample rate alone is not enough. EchoGuard returns INSUFFICIENT_DATA instead of CLEAR in two further cases: an AAC or MP3 encode removed the band above 18 kHz (it sits below −110 dBFS, under any microphone's noise floor), or a "48 kHz" file holds audio with a brick-wall cut-off below 18 kHz. "Not recorded" is not "clean".
 
 ## How it works
 
 1. Load the WAV as a mono float signal at its true sample rate.
 2. Estimate the power spectral density (Welch).
-3. Each detector measures one property (out-of-band energy ratio, high-band peak prominence, 99% energy roll-off) and maps it to a risk score with a documented threshold.
-4. Aggregate to a verdict.
+3. Each detector measures one property (out-of-band energy ratio, high-band peak prominence and its sidebands, 99% energy roll-off) and maps it to a risk score with a documented threshold.
+4. The near-ultrasonic path re-uses the carrier finding and adds a test in time: does the energy beside a 15–18 kHz carrier rise and fall like speech?
+5. Aggregate to a verdict, then require a 15–18 kHz flag to persist across windows.
+
+The full reference, with every constant and evidence key, is [`docs/detectors.md`](docs/detectors.md).
 
 Every threshold is a named constant in the detector module, so they are easy to audit and tune.
 
@@ -186,13 +192,28 @@ Our first result exposed a real weakness and the fix for it. The original "flag 
 
 Measured against synthetic benign audio and synthetic attack fixtures. On **real audio** — 307 openly licensed 44.1/48 kHz recordings (VCTK speech, FSD50K, ESC-50, MUSDB18-HQ), scored as full clips and as 0.5 s and 0.2 s windows, 3,230 segments — the false-positive rate is **0%** after the absolute level floor and carrier-narrowness gate in v0.2.0 (it was 2.0% on full clips before). Measuring detection rate on real attacks is the open research step; see Limitations.
 
+### Published attacks (SWhisper, MetaAttack)
+
+The SWhisper authors shared their recording with us privately; MetaAttack's
+recordings are public demos. Neither is redistributed. Method and full numbers:
+[`benchmark/published_attacks/RESULTS.md`](benchmark/published_attacks/RESULTS.md).
+
+| | before | after |
+| --- | --- | --- |
+| SWhisper (~16 kHz carrier), 58 min | CLEAR | **HIGH_RISK**, 164 sustained events |
+| SWhisper jailbreak payloads, L4 text | 2 / 50 | **50 / 50** |
+| MetaAttack (40 kHz carrier, AAC demos) | CLEAR | **INSUFFICIENT_DATA**; L2 anti-spoofing rejects 43 / 45 chunks |
+| Unmodulated 19–22 kHz beacons (`benchmark/beacon_fp.py`) | 302 / 800 flagged | **0 / 800** |
+| Benign 15–18 kHz tones through a real AAC encode | — | **0 / 4,760** windows |
+
 ## Limitations
 
 This is a **baseline screen**, and it is honest about what it is not:
 
 - The 0% benign false-positive rate above is on **synthetic** audio. The corroboration rule requires both an out-of-band and a carrier signature, so a real attack with an attenuated carrier could be missed — real-capture calibration is pending.
 - **It detects the carrier, not the attack.** Phones and smart speakers capture at 16–48 kHz behind an anti-aliasing filter, which removes an ultrasonic carrier before the audio is stored. On simulated attacks passed through such a chain (`benchmark/synth_attacks.py --evaluate`, now the default) the current detectors catch **4 of 12** at 48 kHz (only carriers in the filter's transition band), 1 of 12 at 44.1 kHz, and return INSUFFICIENT_DATA at 16 kHz; on the 2,934 real recordings of the public DolphinAttack set (all 16 kHz) every clip is INSUFFICIENT_DATA. A baseband detector working on what survives (the demodulated residue in 0–8 kHz) is the next milestone; see `BENCHMARK_REPORT.md` §6.
-- Carriers between 15 and 17.9 kHz are mostly not flagged (below the 18 kHz out-of-band edge; only the sidebands of a near-18 kHz carrier reach the band, giving 17–42% detection). Steady benign ultrasound — 19 kHz retail beacons, 20–22 kHz power-supply whine — is recognised as an unmodulated tone and reported without raising the verdict.
+- Carriers between 15 and 17.9 kHz are flagged only when the energy beside them fluctuates like speech and the flag holds for ~2 s; a near-ultrasonic command shorter than that is reported but not scored. The benign controls for this band are synthetic tones through a real AAC encode, not matched recordings from attack hardware. Steady benign ultrasound — 19 kHz retail beacons, 20–22 kHz power-supply whine — is recognised as an unmodulated tone and reported without raising the verdict.
+- A 40 kHz carrier (MetaAttack) is visible to the signal layer only in a capture at ≥ 96 kHz. Behind a 48 kHz converter or a codec, EchoGuard returns INSUFFICIENT_DATA, and the trust layer's anti-spoofing check is the defence.
 - The baseband detector that a phone capture needs could not be built from available data: on the DolphinAttack phones without ADC artefacts, nothing separates real attack captures from real benign audio at a usable operating point, and the public set has no matched benign recordings. See `BENCHMARK_REPORT.md` §7.
 - Replay and voice-clone spoofing are a separate problem. An experimental baseline lives in `echoguard.spoof` (`pip install echoguard[spoof]`; 16.9% EER on ASVspoof 2019 LA, see `ASVSPOOF_RESULT.md`); it is not wired into `scan`. Application-layer abuse (skill squatting) is out of scope.
 - It works on recorded clips. Real-time, on-device deployment is future work.
@@ -212,6 +233,7 @@ This is a **baseline screen**, and it is honest about what it is not:
 - [x] Trust layer: speaker, source and content checks with the gate as an agent tool call (`echoguard.trust`, `docs/trust_layer.md`)
 - [x] Anti-spoofing in L2 (Spectra-AASIST, calibrated on ASVspoof2019 LA) and a spoken-injection seed corpus for L4 (`benchmark/trust/`)
 - [x] Matched-device corpus manifest, loader and T1–T6 scenario runner (`benchmark/trust/run_scenarios.py`, `docs/corpus_manifest.md`); experimental reverberation-consistency check
+- [x] Near-ultrasonic (15–18 kHz) carrier path, band-limited-capture rule and L4 jailbreak families, validated on the SWhisper and MetaAttack recordings (`benchmark/published_attacks/RESULTS.md`)
 - [ ] Multi-microphone direction of arrival in L3; learned spoken-injection model for L4; replay (physical-access) detection — on the Phase 0 corpus
 
 ## Scope across attack classes
@@ -231,7 +253,7 @@ classes **no public real-attack corpus exists**, which is itself a finding.
 EchoGuard is built on, and credits, a decade of prior work. See `docs/threat_model.md`
 for the full cited coverage matrix and `docs/landscape.md` for the attack/defense
 landscape. Key references: DolphinAttack (CCS 2017), SurfingAttack (NDSS 2020), NUIT
-(USENIX 2023), NormDetect (USENIX 2023), MicGuard (USENIX 2024), EarArray (NDSS 2021),
+(USENIX 2023), SWhisper, MetaAttack (arXiv 2501.15031), NormDetect (USENIX 2023), MicGuard (USENIX 2024), EarArray (NDSS 2021),
 and the ACM Computing Surveys *Voice Assistant Security* survey (2022).
 
 ## Contributing

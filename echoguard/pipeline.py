@@ -129,11 +129,12 @@ def validate_input(signal, sample_rate) -> tuple[np.ndarray, int]:
 # is stricter than above 18 kHz. All of it must hold:
 #   - the carrier detector found a narrow, prominent peak at 15-18 kHz;
 #   - its sideband plateau stands above the background (sideband_plateau_db);
-#   - the sideband energy FLUCTUATES in time far more than the background
-#     band's does: a spoken command modulates it syllable by syllable, while
-#     noise - including noise that rises with frequency, which can lift a
-#     plateau - is steady (variance of log band energy over ~20 ms frames
-#     against the steady-noise variance, chi-square test).
+#   - the sideband energy FLUCTUATES in time far beyond what steady content
+#     gives: a spoken command modulates it syllable by syllable, while noise -
+#     including noise that rises with frequency, which can lift a plateau - is
+#     steady (variance of log band energy over ~20 ms frames against the
+#     theoretical steady-noise variance, chi-square test);
+#   - the flag persists for NEAR_PERSIST_WINDOWS consecutive windows.
 # The energy concentrated around the carrier (from 12 kHz up, above any speech
 # content) then stands in for the out-of-band share.
 NEAR_CARRIER_LOW, NEAR_CARRIER_HIGH = 15_000.0, 18_000.0
@@ -274,7 +275,8 @@ class Pipeline:
         win = max(MIN_SAMPLES, int(round(window_sec * sr)))
         hop = max(1, int(round(hop_sec * sr)))
         if len(mono) <= win:
-            reports = [self._analyze_clean(mono, sr)]
+            # one window cannot show persistence, so a 15-18 kHz flag alone is set aside
+            reports = self._require_persistence([self._analyze_clean(mono, sr)])
         else:
             starts = list(range(0, len(mono) - win + 1, hop))
             if starts[-1] + win < len(mono):
@@ -417,20 +419,22 @@ class StreamAnalyzer:
         out: List[Report] = []
         while len(self._buf) >= self.win:
             start = self._consumed / self.sr
-            r = self.pipeline._analyze_clean(self._buf[:self.win], self.sr, start_sec=start)
-            # a 15-18 kHz flag needs the previous window to carry it too (see _require_persistence)
-            near = Pipeline._near_only(r)
-            self._near_run = self._near_run + 1 if near else 0
-            if near and self._near_run < NEAR_PERSIST_WINDOWS:
-                r = Pipeline._without_near(r)
-            out.append(r)
+            out.append(self._persist(self.pipeline._analyze_clean(self._buf[:self.win], self.sr, start_sec=start)))
             self._buf = self._buf[self.hop:]
             self._consumed += self.hop
         if final and len(self._buf) >= MIN_SAMPLES:
-            out.append(self.pipeline._analyze_clean(self._buf, self.sr, start_sec=self._consumed / self.sr))
+            out.append(self._persist(self.pipeline._analyze_clean(self._buf, self.sr, start_sec=self._consumed / self.sr)))
             self._consumed += len(self._buf)
             self._buf = np.zeros(0, dtype=np.float64)
         return iter(out)
+
+    def _persist(self, r: Report) -> Report:
+        """A 15-18 kHz flag stands once NEAR_PERSIST_WINDOWS consecutive windows carry it (see
+        `Pipeline._require_persistence`). A stream cannot look ahead, so the first windows of a
+        run are reported without it."""
+        near = Pipeline._near_only(r)
+        self._near_run = self._near_run + 1 if near else 0
+        return Pipeline._without_near(r) if near and self._near_run < NEAR_PERSIST_WINDOWS else r
 
 
 def iter_windows(signal, sample_rate, window_sec: float = 1.0, hop_sec: float = 0.5) -> Iterable[Report]:

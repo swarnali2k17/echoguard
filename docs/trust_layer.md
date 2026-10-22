@@ -10,7 +10,7 @@ summarises them into a trust level and, with the action's sensitivity, returns
 | L1 signal integrity | Is the audio physically genuine — no ultrasonic carrier, no out-of-band energy? | `SignalIntegrityCheck` (the EchoGuard pipeline) | audio at ≥ 44.1 kHz; below that it reports *could not check* |
 | L2 speaker identity | Is this the enrolled user? Is it a live human voice rather than synthesis, conversion or playback? | `SpeakerVerificationCheck` (ECAPA-TDNN embeddings, cosine to the enrolled profile); `AntiSpoofCheck` (Spectra-AASIST bonafide score) | `pip install "echoguard[trust]"`, a `SpeakerProfile` for verification, ≥ 0.8 s of speech; ~1.5 GB of weights on first run for anti-spoofing |
 | L3 source attribution | Did the wake word and the command come from the same voice? | `SameSpeakerCheck` (embedding similarity between the two segments) | the wake-word segment; no enrolment needed |
-| L4 content safety | Is the transcript a spoken prompt injection? Do two decoders agree? | `ContentSafetyCheck` (pattern families: override, role change, exfiltration, authority claim, tool abuse, concealment), `TranscriptConsistencyCheck` (word error rate between decoders) | the transcript; optionally a second transcript |
+| L4 content safety | Is the transcript a spoken prompt injection? Do two decoders agree? | `ContentSafetyCheck` (pattern families: override, role change, forcing, exfiltration, authority claim, tool abuse, concealment, jailbreak), `TranscriptConsistencyCheck` (word error rate between decoders) | the transcript; optionally a second transcript |
 
 Every check returns a `TrustSignal` with `trust` in [0, 1] (1 = fully consistent
 with the genuine user), an `assessable` flag, a sentence of detail and the
@@ -112,7 +112,11 @@ public-proxy corpus in the same format so the whole path runs today.
   captures and must be re-measured on the Phase 0 corpus.
 - L4 is a transparent rule baseline with eight families: override, role
   change, forcing, exfiltration, authority claim, tool abuse (recited
-  destinations and secrets), concealment. Every match is returned in the
+  destinations and secrets), concealment, and jailbreak. The jailbreak family
+  covers always-comply personas, refusal suppression, forced response prefixes,
+  ethics waivers and fictional framing (Wei et al. 2023). It raised SWhisper's 50
+  spoken jailbreak payloads from 2 to 50 detected, with no new false alarms on
+  SLURP (`benchmark/published_attacks/RESULTS.md`). Every match is returned in the
   evidence so a reviewer sees exactly why a transcript scored.
 - Multi-microphone direction-of-arrival (L3) waits on raw-channel captures.
 

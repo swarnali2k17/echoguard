@@ -85,3 +85,14 @@ def test_ordinary_capture_with_a_noise_floor_is_still_cleared():
     x = sps.sosfilt(sos, rng.standard_normal(n))
     x = 0.5 * x / np.abs(x).max() + 10 ** (-90 / 20) * rng.standard_normal(n)
     assert Pipeline().analyze(x, SR).verdict == CLEAR
+
+
+def test_near_ultrasonic_flag_needs_persistence():
+    from echoguard.pipeline import StreamAnalyzer
+    short = _near_ultrasonic_injection(seconds=0.9)          # shorter than one window
+    assert Pipeline().analyze_windows(short, SR).summary.verdict == CLEAR
+    assert Pipeline().analyze(short, SR).verdict == CLEAR
+    stream = StreamAnalyzer(SR)
+    reports = list(stream.push(_near_ultrasonic_injection(seconds=3.0))) + list(stream.flush())
+    flagged = [r.verdict in (SUSPICIOUS, HIGH_RISK) for r in reports]
+    assert not any(flagged[:2]) and any(flagged[2:])         # the first windows of a run cannot know yet

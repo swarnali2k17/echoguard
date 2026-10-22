@@ -1,6 +1,6 @@
 # EchoGuard threat model and detection coverage
 
-**As-of:** 2026-10-08. This document answers one question: *beyond DolphinAttack,
+**As-of:** 2026-10-22 (first written 2026-10-08). This document answers one question: *beyond DolphinAttack,
 what classes of voice-injection attack exist, and which of them can a software
 detector that runs on an ordinary recording actually catch?* You cannot defend
 what you cannot detect, and you cannot measure detection without test data — so
@@ -40,14 +40,14 @@ detectable with current features · N/A out of the injection scope.
 | # | Attack class | In-air band | What survives a 16/48 kHz capture | EchoGuard today | Public real-attack data |
 | --- | --- | --- | --- | --- | --- |
 | 1 | **Ultrasonic AM injection** (DolphinAttack family) | ~25–40 kHz carrier | Demodulated command in 0–8 kHz; carrier gone; sometimes device-specific aliased lines | ⚠️ carrier only, at ≥ 96 kHz | **Yes** — DolphinAttack set, 16 kHz, no matched benign |
-| 2 | **Near-ultrasound in media** (NUIT) | ~16–22 kHz | On devices that keep ≥ 16 kHz: the near-US band itself (partly). On devices that low-pass < 16 kHz: little | ⚠️ partial — a modulated carrier ≥ 18 kHz is caught; 15–17.9 kHz only via sidebands | No public capture set found |
+| 2 | **Near-ultrasound in media** (NUIT) | ~16–22 kHz | On devices that keep ≥ 16 kHz: the near-US band itself (partly). On devices that low-pass < 16 kHz: little | ✅ on a capture that keeps the band — ≥ 18 kHz by the out-of-band path; 15–18 kHz by the near-ultrasonic path (sidebands + fluctuation + persistence, `docs/detectors.md`); a codec-cut capture → INSUFFICIENT_DATA | SWhisper recording (58 min, ~16 kHz carrier), shared privately by the authors — detected (`benchmark/published_attacks/RESULTS.md`) |
 | 3 | **Solid-surface / guided-wave** (SurfingAttack, SUAD) | ~21–28 kHz through a surface | Same as class 1: demodulated baseband; carrier removed | ⚠️ high-rate only | No public capture set found |
 | 4 | **Laser / light injection** (LightCommands) | Optical, not acoustic | The induced *audible* signal in the mic; no ultrasonic trace | ❌ looks like ordinary injected audio in-band | Artifacts released (see datasets) |
 | 5 | **EM / power-line injection** (GhostTalk-style) | RF / conducted | Induced in-band audio; no acoustic HF trace | ❌ | No public capture set found |
 | 6 | **Hidden / adversarial audible audio** (Hidden Voice Commands, CommanderSong, psychoacoustic) | 0–8 kHz, audible but obfuscated | Everything — it is in-band by design | ❌ not an out-of-band signature; needs an ASR-consistency or adversarial-perturbation detector | Some code/samples public |
 | 7 | **Adversarial perturbation vs ASR / LLM voice agents** (2024–2026: VRIFLE, AudioHijack, speech-LLM jailbreaks) | 0–8 kHz (some ultrasonic-delivered) | In-band perturbation; ultrasonic-delivered variants reduce to class 1/2 | ❌ for the in-band form | Some benchmarks public (agent-layer) |
 | 8 | **Hearable / earbud-generated ultrasound** | demodulated inside the earbud | Phantom audio already in the user's ear; attacker's signal may not reach a separate mic | ❌ wrong sensor location | No public capture set found |
-| 9 | **Metamaterial-assisted ultrasound** | ultrasonic, longer range | Same residue as class 1 | ⚠️ high-rate only | No public capture set found |
+| 9 | **Metamaterial-assisted ultrasound** (MetaAttack) | ~40 kHz carrier, longer range | Same residue as class 1 | ⚠️ high-rate only; a 48 kHz / AAC capture → INSUFFICIENT_DATA, and L2 anti-spoofing rejects 43 / 45 demo chunks | Six public demo recordings (AAC, 48 kHz, carrier removed); no licence, not redistributed |
 | 10 | **Replay / voice-clone spoofing** | 0–8 kHz speech | In-band synthetic/replayed speech | N/A — `echoguard.spoof` (separate baseline, 16.9% EER) | **Yes** — ASVspoof 2019/2021/5 |
 
 ## What this says about where to invest
@@ -68,7 +68,7 @@ problem — and it is blocked on matched benign+attack data, which
 *capture appliance* — a dedicated mic running at 96–192 kHz at the point of
 ingest — but not for software on a shipping phone. NUIT (class 2) is the partial
 exception: on devices that retain 16–22 kHz, a modulated carrier in that band is
-visible at 48 kHz, which our sideband work now catches above 18 kHz.
+visible at 48 kHz, which EchoGuard now catches both above 18 kHz and, through the near-ultrasonic path, at 15–18 kHz (validated on the SWhisper recording).
 
 **(c) No out-of-band signature at all, or no sensor access.** Classes 4, 5, 6, 7
 (in-band), and 8 cannot be caught by *any* out-of-band or carrier feature, because
@@ -93,8 +93,13 @@ in-band). **No public matched-device corpus exists for any ultrasonic, laser, EM
 solid-surface physical-injection class.** DolphinAttack is the one ultrasonic set
 and has no matched benign. Explicit negatives (searched, none located as of
 2026-10-08): NUIT (2), SurfingAttack/SUAD (3), GhostTalk (5), VRIFLE/AudioHijack/
-Sirens' Whisper (8), UltrasonicWhisper+ (9), MetaAttack (10) — demo pages or videos
+Sirens' Whisper (8), UltrasonicWhisper+ (9) — demo pages or videos
 only; LightCommands (4) hardware demos only.
+
+> **Update 2026-10-22.** Two research groups answered our requests for data. SWhisper (class 2)
+> shared its 58-minute attack recording privately, and MetaAttack (class 9) has six public demo
+> recordings. Neither has matched benign audio or is redistributable. Results are in
+> `benchmark/published_attacks/RESULTS.md`.
 
 > **AdvSV does not fill our gap (assessed 2026-10-08).** It is **16 kHz** and
 > **in-band**, so it is below the injection detector's capture-rate floor — every
