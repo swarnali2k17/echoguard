@@ -186,7 +186,7 @@ def _mirrored_line_power(freqs: np.ndarray, psd: np.ndarray, peak_freq: float, d
     t = float(stats.chi2.isf(np.sqrt(SIDEBAND_LINE_FALSE_ALARM_PROB / offsets.size), dof) / dof)
     best = 0.0
     for k in offsets:
-        lo, hi = k0 - k, k0 + k
+        lo, hi = k0 - int(k), k0 + int(k)
         flo, fhi = local_floor(lo), local_floor(hi)
         if psd[lo] > t * flo and psd[hi] > t * fhi:
             best = max(best, float(psd[lo] - flo + psd[hi] - fhi))

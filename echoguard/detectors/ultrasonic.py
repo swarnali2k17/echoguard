@@ -64,9 +64,9 @@ def lowpass_cutoff_hz(freqs: np.ndarray, psd: np.ndarray) -> float | None:
             best_drop, best_i = float(below - above), i
     if best_i is None or best_drop < CUTOFF_DROP_DB:
         return None
-    below = float(np.median(db[max(0, best_i - hi_w):best_i - lo_w + 1]))
+    content = float(np.median(db[max(0, best_i - hi_w):best_i - lo_w + 1]))
     tail = db[best_i + lo_w:]
-    if np.percentile(tail, 95) > below - 25.0:
+    if np.percentile(tail, 95) > content - 25.0:
         return None    # something above the edge comes close to the content: it continues
     return float(freqs[best_i])
 
