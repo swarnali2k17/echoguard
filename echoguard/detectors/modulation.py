@@ -62,6 +62,14 @@ SIDEBAND_LINE_BINS = 3
 SIDEBAND_FLOOR_DB = -60.0
 SIDEBAND_FULL_DB = -35.0
 BARE_TONE_RISK_SCALE = 0.05
+# Sidebands must stand out from the capture's own noise before they count as
+# modulation: probability that noise alone clears the gate.
+SIDEBAND_FALSE_ALARM_PROB = 1e-3
+# The mirrored-line search tries every offset, so it gets a stricter budget of its own.
+SIDEBAND_LINE_FALSE_ALARM_PROB = 1e-4
+# Variance of a sum of Hann-windowed periodogram bins relative to independent
+# bins: adjacent bins correlate ~0.25, bins two apart ~0.03, so 1 + 2(0.25 + 0.03).
+HANN_SUM_VARIANCE = 1.56
 
 _EMPTY_EVIDENCE = {
     "assessable": None,
@@ -76,25 +84,84 @@ _EMPTY_EVIDENCE = {
 }
 
 
-def sideband_ratio_db(freqs: np.ndarray, psd: np.ndarray, peak_freq: float) -> float:
+def sideband_ratio_db(freqs: np.ndarray, psd: np.ndarray, peak_freq: float,
+                      dof: float | None = None) -> float:
     """Modulation sidebands around `peak_freq`, relative to the line itself, in dB.
 
-    Both are measured as power in excess of a local floor (the running median
-    over +-150 Hz). The excess is taken over the whole region, not bin by bin,
-    so that broadband noise under the carrier - whose bins scatter above and
-    below the floor - nets to about zero rather than accumulating its positive
-    half as if it were modulation.
+    The line is measured as power above its immediate neighbourhood (the median
+    within +-150 Hz). The sidebands are measured against the BACKGROUND - the
+    median level 4.5-7.5 kHz away from the carrier, outside any speech-band
+    sideband. A command spreads its sidebands into a broad plateau +-4 kHz wide;
+    a floor taken from inside that plateau (as an earlier version did) measures
+    the plateau against itself and finds nothing, so modulation was only ever
+    seen through noise excursions - the same excursions that made noisy beacons
+    read as modulated (38% of unmodulated 19-22 kHz tones at 20-40 dB SNR:
+    benchmark/beacon_fp.py).
+
+    With `dof`, the summed sideband excess must also clear what noise alone would
+    reach with probability SIDEBAND_FALSE_ALARM_PROB - the CFAR idea of the peak
+    threshold. Each Welch bin is ~ background * chi2(dof)/dof, so the sum over
+    the sideband bins has a known spread; below it the peak is a bare tone,
+    however loud the room.
     """
     df = float(freqs[1] - freqs[0]) if len(freqs) > 1 else 1.0
-    half = max(3, int(round(150.0 / df)))
-    pad = np.pad(psd, half, mode="edge")
-    floor = np.array([np.median(pad[i:i + 2 * half + 1]) for i in range(len(psd))])
     d = np.abs(freqs - peak_freq)
     in_line = d <= SIDEBAND_LINE_BINS * df
+    near = (d > SIDEBAND_LINE_BINS * df) & (d <= SIDEBAND_LOW)
     in_side = (d >= SIDEBAND_LOW) & (d <= SIDEBAND_HIGH)
-    line = max(float((psd[in_line] - floor[in_line]).sum()), 0.0)
-    side = max(float((psd[in_side] - floor[in_side]).sum()), 0.0)
+    ref = (d >= SIDEBAND_HIGH + 500.0) & (d <= SIDEBAND_HIGH + 3_500.0) & (freqs >= 1_000.0)
+    if np.count_nonzero(ref) < 8 or not np.any(in_side):
+        return float("-inf")    # nowhere to measure modulation against: treat as a bare tone
+    # the median of chi2(dof)/dof sits slightly below its mean; scale it so pure noise nets to zero
+    unbias = (dof / stats.chi2.median(dof)) if dof else 1.0
+    line_floor = float(np.median(psd[near])) * unbias if np.any(near) else 0.0
+    background = float(np.median(psd[ref])) * unbias
+    line = max(float((psd[in_line] - line_floor).sum()), 0.0)
+    # Sideband level is the MEDIAN over the whole sideband region: a command lifts the entire
+    # +-150 Hz..4 kHz plateau, while the leakage skirt of a loud bare tone through the Hann window
+    # touches only the first few bins and cannot move the median. Expressed as an excess power
+    # summed over the region so it compares with the line on the same scale.
+    n_side, n_ref = int(np.count_nonzero(in_side)), int(np.count_nonzero(ref))
+    level = float(np.median(psd[in_side])) * unbias - background
+    if dof:
+        # Spread of the difference of two medians of noise-only bins (background * chi2(dof)/dof):
+        # a median's standard error is ~1.2533 sigma / sqrt(n), widened for Hann bin correlation.
+        se = background * float(np.sqrt(2.0 / dof * HANN_SUM_VARIANCE)) * 1.2533 * float(np.sqrt(1.0 / n_side + 1.0 / n_ref))
+        if level < stats.norm.isf(SIDEBAND_FALSE_ALARM_PROB) * se:
+            level = 0.0
+    side = max(level, 0.0) * n_side
+    # A carrier modulated by a tone (rather than by speech) shows discrete sideband LINES mirrored
+    # either side of it instead of a plateau. Look for a mirrored pair, each above its own local
+    # floor by a CFAR margin; offsets start at 300 Hz so a bare tone's leakage skirt - smooth, and
+    # tracked by the local median - cannot qualify.
+    if dof:
+        side = max(side, _mirrored_line_power(freqs, psd, peak_freq, dof, unbias))
     return float(10.0 * np.log10((side + 1e-30) / (line + 1e-30)))
+
+
+def _mirrored_line_power(freqs: np.ndarray, psd: np.ndarray, peak_freq: float, dof: float,
+                         unbias: float) -> float:
+    """Power of the strongest mirrored sideband pair at |f - peak| in [300 Hz, SIDEBAND_HIGH], or 0."""
+    df = float(freqs[1] - freqs[0])
+    k0 = int(np.argmin(np.abs(freqs - peak_freq)))
+    half = max(3, int(round(150.0 / df)))
+    offsets = np.arange(int(np.ceil(300.0 / df)), int(SIDEBAND_HIGH / df) + 1)
+    offsets = offsets[(k0 - offsets >= half) & (k0 + offsets < len(psd) - half)]
+    if offsets.size == 0:
+        return 0.0
+    def local_floor(i: int) -> float:
+        w = np.r_[psd[i - half:i - 1], psd[i + 2:i + half + 1]]    # excludes the bin and its neighbours
+        return float(np.median(w)) * unbias
+    # each noise bin ~ floor * chi2(dof)/dof; both bins of a pair must clear t, and the search covers
+    # offsets.size pairs, so the per-bin tail probability is sqrt(SIDEBAND_LINE_FALSE_ALARM_PROB / n)
+    t = float(stats.chi2.isf(np.sqrt(SIDEBAND_LINE_FALSE_ALARM_PROB / offsets.size), dof) / dof)
+    best = 0.0
+    for k in offsets:
+        lo, hi = k0 - k, k0 + k
+        flo, fhi = local_floor(lo), local_floor(hi)
+        if psd[lo] > t * flo and psd[hi] > t * fhi:
+            best = max(best, float(psd[lo] - flo + psd[hi] - fhi))
+    return best
 
 
 def peak_narrowness(band: np.ndarray, k: int) -> float:
@@ -168,7 +235,7 @@ class CarrierPeakDetector(Detector):
         excess_db = prominence_db - threshold_db
         narrowness = peak_narrowness(band, k)
         narrow_factor = clip01((narrowness - NARROW_FLOOR) / (NARROW_FULL - NARROW_FLOOR))
-        sideband_db = sideband_ratio_db(freqs, psd, peak_freq)
+        sideband_db = sideband_ratio_db(freqs, psd, peak_freq, dof)
         mod_factor = BARE_TONE_RISK_SCALE + (1.0 - BARE_TONE_RISK_SCALE) * clip01(
             (sideband_db - SIDEBAND_FLOOR_DB) / (SIDEBAND_FULL_DB - SIDEBAND_FLOOR_DB))
         bare_tone = sideband_db < SIDEBAND_FLOOR_DB
