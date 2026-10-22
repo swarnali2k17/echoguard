@@ -62,6 +62,12 @@ SIDEBAND_LINE_BINS = 3
 SIDEBAND_FLOOR_DB = -60.0
 SIDEBAND_FULL_DB = -35.0
 BARE_TONE_RISK_SCALE = 0.05
+# Sideband plateau above the background, used by the near-ultrasonic path
+# (pipeline.py) together with a fluctuation test: SWhisper's hardware measures
+# 12.7-15.8 dB (5th-95th percentile over its 58-minute recording), synthetic AM
+# attacks 23-25 dB, benign beacons in white noise at most 0.34 dB.
+PLATEAU_FLOOR_DB = 2.0
+PLATEAU_FULL_DB = 8.0
 # Sidebands must stand out from the capture's own noise before they count as
 # modulation: probability that noise alone clears the gate.
 SIDEBAND_FALSE_ALARM_PROB = 1e-3
@@ -80,63 +86,86 @@ _EMPTY_EVIDENCE = {
     "excess_db": None,
     "narrowness": None,
     "sideband_db": None,
+    "sideband_plateau_db": None,
+    "modulated": None,
+    "prominence_risk": None,
     "welch_dof": None,
 }
 
 
-def sideband_ratio_db(freqs: np.ndarray, psd: np.ndarray, peak_freq: float,
-                      dof: float | None = None) -> float:
-    """Modulation sidebands around `peak_freq`, relative to the line itself, in dB.
+def sideband_measures(freqs: np.ndarray, psd: np.ndarray, peak_freq: float,
+                      dof: float | None = None) -> tuple[float, float]:
+    """(ratio_db, plateau_db): how strongly `peak_freq` is modulated.
 
-    The line is measured as power above its immediate neighbourhood (the median
-    within +-150 Hz). The sidebands are measured against the BACKGROUND - the
-    median level 4.5-7.5 kHz away from the carrier, outside any speech-band
-    sideband. A command spreads its sidebands into a broad plateau +-4 kHz wide;
-    a floor taken from inside that plateau (as an earlier version did) measures
-    the plateau against itself and finds nothing, so modulation was only ever
-    seen through noise excursions - the same excursions that made noisy beacons
-    read as modulated (38% of unmodulated 19-22 kHz tones at 20-40 dB SNR:
-    benchmark/beacon_fp.py).
+    ratio_db  - sideband power relative to the line itself, in dB.
+    plateau_db - how far the sideband plateau stands above the background, in dB.
 
-    With `dof`, the summed sideband excess must also clear what noise alone would
-    reach with probability SIDEBAND_FALSE_ALARM_PROB - the CFAR idea of the peak
-    threshold. Each Welch bin is ~ background * chi2(dof)/dof, so the sum over
-    the sideband bins has a known spread; below it the peak is a bare tone,
-    however loud the room.
+    The line is measured above its immediate neighbourhood (median within
+    +-150 Hz). The sidebands are measured on the LOWER side of the carrier,
+    against the background 4.5-7.5 kHz below it - outside any speech-band
+    sideband. A command spreads its sidebands into a broad plateau; a floor taken
+    from inside that plateau (an earlier version) measured it against itself and
+    saw modulation only through noise excursions - the same excursions that made
+    noisy beacons read as modulated (38% of unmodulated 19-22 kHz tones at
+    20-40 dB SNR: benchmark/beacon_fp.py). Only the lower side is used because the
+    upper side often lies above a codec's cut-off, where silence would drag a
+    pooled background down and fake a plateau.
+
+    The plateau level is a MEDIAN over the sideband region: the leakage skirt of
+    a loud bare tone touches only the first few bins and cannot move it. With
+    `dof`, it must also clear what noise alone would reach with probability
+    SIDEBAND_FALSE_ALARM_PROB (each Welch bin ~ background * chi2(dof)/dof) - the
+    CFAR idea of the peak threshold. Below that the peak is a bare tone (both
+    measures -inf), however loud the room.
+
+    The two measures answer different questions. A deeply modulated synthetic
+    attack has sidebands only ~25 dB under its line; SWhisper's hardware drives a
+    carrier ~94 dB above the floor, so its sidebands sit ~65 dB under the line yet
+    ~14 dB above the background in every window. A beacon's plateau never clears
+    the gate (at most 0.34 dB above background at 20-40 dB SNR).
     """
     df = float(freqs[1] - freqs[0]) if len(freqs) > 1 else 1.0
-    d = np.abs(freqs - peak_freq)
+    off = peak_freq - freqs                                  # positive below the carrier
+    d = np.abs(off)
     in_line = d <= SIDEBAND_LINE_BINS * df
     near = (d > SIDEBAND_LINE_BINS * df) & (d <= SIDEBAND_LOW)
-    in_side = (d >= SIDEBAND_LOW) & (d <= SIDEBAND_HIGH)
-    ref = (d >= SIDEBAND_HIGH + 500.0) & (d <= SIDEBAND_HIGH + 3_500.0) & (freqs >= 1_000.0)
-    if np.count_nonzero(ref) < 8 or not np.any(in_side):
-        return float("-inf")    # nowhere to measure modulation against: treat as a bare tone
+    in_side = (off >= SIDEBAND_LOW) & (off <= SIDEBAND_HIGH)
+    ref = (off >= SIDEBAND_HIGH + 500.0) & (off <= SIDEBAND_HIGH + 3_500.0) & (freqs >= 1_000.0)
+    if np.count_nonzero(ref) < 8 or np.count_nonzero(in_side) < 8:
+        return float("-inf"), float("-inf")    # nowhere to measure modulation against: a bare tone
     # the median of chi2(dof)/dof sits slightly below its mean; scale it so pure noise nets to zero
     unbias = (dof / stats.chi2.median(dof)) if dof else 1.0
     line_floor = float(np.median(psd[near])) * unbias if np.any(near) else 0.0
     background = float(np.median(psd[ref])) * unbias
     line = max(float((psd[in_line] - line_floor).sum()), 0.0)
-    # Sideband level is the MEDIAN over the whole sideband region: a command lifts the entire
-    # +-150 Hz..4 kHz plateau, while the leakage skirt of a loud bare tone through the Hann window
-    # touches only the first few bins and cannot move the median. Expressed as an excess power
-    # summed over the region so it compares with the line on the same scale.
     n_side, n_ref = int(np.count_nonzero(in_side)), int(np.count_nonzero(ref))
-    level = float(np.median(psd[in_side])) * unbias - background
+    plateau = float(np.median(psd[in_side])) * unbias
+    level = plateau - background
     if dof:
-        # Spread of the difference of two medians of noise-only bins (background * chi2(dof)/dof):
-        # a median's standard error is ~1.2533 sigma / sqrt(n), widened for Hann bin correlation.
+        # Spread of the difference of two medians of noise-only bins: a median's standard error
+        # is ~1.2533 sigma / sqrt(n), widened for the correlation of Hann-windowed bins.
         se = background * float(np.sqrt(2.0 / dof * HANN_SUM_VARIANCE)) * 1.2533 * float(np.sqrt(1.0 / n_side + 1.0 / n_ref))
         if level < stats.norm.isf(SIDEBAND_FALSE_ALARM_PROB) * se:
             level = 0.0
-    side = max(level, 0.0) * n_side
+    # the lower side stands for both: double it so the ratio keeps its two-sided scale
+    side = 2.0 * max(level, 0.0) * n_side
     # A carrier modulated by a tone (rather than by speech) shows discrete sideband LINES mirrored
     # either side of it instead of a plateau. Look for a mirrored pair, each above its own local
     # floor by a CFAR margin; offsets start at 300 Hz so a bare tone's leakage skirt - smooth, and
     # tracked by the local median - cannot qualify.
     if dof:
         side = max(side, _mirrored_line_power(freqs, psd, peak_freq, dof, unbias))
-    return float(10.0 * np.log10((side + 1e-30) / (line + 1e-30)))
+    if side <= 0.0:
+        return float("-inf"), float("-inf")
+    ratio_db = float(10.0 * np.log10(side / (line + 1e-30)))
+    plateau_db = float(10.0 * np.log10(plateau / background)) if level > 0 and background > 0 else float("-inf")
+    return ratio_db, plateau_db
+
+
+def sideband_ratio_db(freqs: np.ndarray, psd: np.ndarray, peak_freq: float,
+                      dof: float | None = None) -> float:
+    """Sideband power relative to the line, in dB (see `sideband_measures`)."""
+    return sideband_measures(freqs, psd, peak_freq, dof)[0]
 
 
 def _mirrored_line_power(freqs: np.ndarray, psd: np.ndarray, peak_freq: float, dof: float,
@@ -235,12 +264,16 @@ class CarrierPeakDetector(Detector):
         excess_db = prominence_db - threshold_db
         narrowness = peak_narrowness(band, k)
         narrow_factor = clip01((narrowness - NARROW_FLOOR) / (NARROW_FULL - NARROW_FLOOR))
-        sideband_db = sideband_ratio_db(freqs, psd, peak_freq, dof)
-        mod_factor = BARE_TONE_RISK_SCALE + (1.0 - BARE_TONE_RISK_SCALE) * clip01(
-            (sideband_db - SIDEBAND_FLOOR_DB) / (SIDEBAND_FULL_DB - SIDEBAND_FLOOR_DB))
-        bare_tone = sideband_db < SIDEBAND_FLOOR_DB
+        sideband_db, plateau_db = sideband_measures(freqs, psd, peak_freq, dof)
+        # Modulation relative to the line decides the carrier's own risk. The plateau's height above
+        # the background is reported too; on its own it is not trusted (noise that rises with
+        # frequency lifts it), and the near-ultrasonic path pairs it with a test in time.
+        modulation = clip01((sideband_db - SIDEBAND_FLOOR_DB) / (SIDEBAND_FULL_DB - SIDEBAND_FLOOR_DB))
+        mod_factor = BARE_TONE_RISK_SCALE + (1.0 - BARE_TONE_RISK_SCALE) * modulation
+        bare_tone = modulation <= 0.0
 
-        risk = clip01(excess_db / PROMINENCE_DB_SATURATION) * narrow_factor * mod_factor
+        prominence_risk = clip01(excess_db / PROMINENCE_DB_SATURATION) * narrow_factor
+        risk = prominence_risk * mod_factor
         if risk >= 0.66:
             detail = (
                 f"Dominant narrowband tone at {peak_freq/1000:.1f} kHz stands "
@@ -256,7 +289,7 @@ class CarrierPeakDetector(Detector):
         elif bare_tone and excess_db > 0 and narrow_factor > 0:
             detail = (
                 f"Steady unmodulated tone at {peak_freq/1000:.1f} kHz "
-                f"({prominence_db:.0f} dB above floor, sidebands {sideband_db:.0f} dB): "
+                f"({prominence_db:.0f} dB above floor, no sidebands above the noise): "
                 f"a beacon, pilot or power-supply whine rather than a command carrier."
             )
         elif excess_db > 0 and narrow_factor < 1.0:
@@ -279,7 +312,10 @@ class CarrierPeakDetector(Detector):
                 "noise_threshold_db": float(threshold_db),
                 "excess_db": float(excess_db),
                 "narrowness": narrowness,
-                "sideband_db": sideband_db,
+                "sideband_db": sideband_db if np.isfinite(sideband_db) else None,
+                "sideband_plateau_db": plateau_db if np.isfinite(plateau_db) else None,
+                "modulated": bool(not bare_tone),
+                "prominence_risk": float(prominence_risk),
                 "welch_dof": float(dof),
             },
         )

@@ -456,9 +456,9 @@ function narrative(d, oob, car) {
       reason: `${pct ?? "Some"}% of the energy is above ${(t.oob_edge_hz / 1000).toFixed(0)} kHz${fc ? ` with a carrier-like peak at ${(fc / 1000).toFixed(1)} kHz` : ""}, but not enough to be conclusive.`,
       action: "Require explicit confirmation before sensitive actions." };
     default: {
-      const bare = fc && sb != null && sb < t.sideband_full_db && car && car.e.prominence_db != null && car.e.prominence_db >= 20;
+      const bare = fc && (sb == null || sb < t.sideband_full_db) && car && car.e.prominence_db != null && car.e.prominence_db >= 20;
       let reason;
-      if (bare) reason = `A steady tone at ${(fc / 1000).toFixed(1)} kHz carries ${pct}% of the energy, but it has ${sb <= t.sideband_floor_db ? "no" : "almost no"} modulation sidebands (${sb.toFixed(0)} dB) — the signature of a beacon or power-supply whine, not a command carrier.`;
+      if (bare) reason = `A steady tone at ${(fc / 1000).toFixed(1)} kHz carries ${pct}% of the energy, but it has ${sb == null ? "no modulation sidebands above the noise" : (sb <= t.sideband_floor_db ? "no" : "almost no") + " modulation sidebands (" + sb.toFixed(0) + " dB)"} — the signature of a beacon or power-supply whine, not a command carrier.`;
       else if (a.oob_level_dbfs != null && a.oob_level_dbfs < t.oob_min_level_dbfs) reason = `Energy above ${(t.oob_edge_hz / 1000).toFixed(0)} kHz is at ${a.oob_level_dbfs.toFixed(0)} dBFS — below the ${t.oob_min_level_dbfs} dBFS floor, too little to be a carrier.`;
       else if (r != null && r * 100 >= 1.09) reason = `${pct}% of the energy is above ${(t.oob_edge_hz / 1000).toFixed(0)} kHz, but no modulated carrier was found. Broadband or tonal high-frequency content on its own is not an injection.`;
       else reason = `Only ${pct}% of the energy is above ${(t.oob_edge_hz / 1000).toFixed(0)} kHz and no modulated carrier was found.`;
@@ -476,7 +476,7 @@ function heroStats(d, oob, car) {
   return [
     { k: "Energy above 18 kHz", help: "stat:oob", v: a.oob_ratio == null ? "—" : (a.oob_ratio * 100).toFixed(a.oob_ratio < .01 ? 2 : 1), u: "%", h: a.oob_level_dbfs == null ? "" : `${a.oob_level_dbfs.toFixed(0)} dBFS band level` },
     isCarrier ? { k: "Carrier", help: "stat:carrier", v: (a.carrier_peak_hz / 1000).toFixed(2), u: "kHz", h: `${a.carrier_prominence_db.toFixed(0)} dB above floor` }
-      : { k: "Carrier", help: "stat:carrier", v: "none", u: "", h: a.carrier_peak_hz && sb != null && sb < t.sideband_full_db && car && car.e.prominence_db >= 20 ? `unmodulated tone at ${(a.carrier_peak_hz / 1000).toFixed(1)} kHz` : "no modulated carrier" },
+      : { k: "Carrier", help: "stat:carrier", v: "none", u: "", h: a.carrier_peak_hz && (sb == null || sb < t.sideband_full_db) && car && car.e.prominence_db >= 20 ? `unmodulated tone at ${(a.carrier_peak_hz / 1000).toFixed(1)} kHz` : "no modulated carrier" },
     { k: "Modulation sidebands", help: "stat:sideband", v: sb == null ? "—" : sb.toFixed(0), u: sb == null ? "" : "dB", h: sb == null ? "" : sb >= t.sideband_full_db ? "modulated — command-like" : sb <= t.sideband_floor_db ? "bare tone — beacon-like" : "weakly modulated" }];
 }
 function renderScore(el, d, { small = false } = {}) {
@@ -518,7 +518,9 @@ function breakdown(d, oob, car) {
     h += meter({ key: "meter:prominence", label: "Peak above CFAR noise floor", value: ex, display: ex.toFixed(0) + " dB", min: 0, max: 40, ticks: [[t.carrier_prominence_saturation_db, "saturates"]] });
     h += meter({ key: "meter:narrowness", label: "Peak narrowness", value: car.e.narrowness, display: car.e.narrowness.toFixed(2), min: 0, max: 1,
       zones: [[t.narrow_floor, t.narrow_full, "rgba(76,195,255,.14)"], [t.narrow_full, 1, "rgba(76,195,255,.26)"]], ticks: [[t.narrow_floor, "broad"], [t.narrow_full, "narrow"]] });
-    h += meter({ key: "meter:sideband", label: "Modulation sidebands", value: car.e.sideband_db, display: car.e.sideband_db.toFixed(0) + " dB", min: -120, max: 0,
+    // null sidebands = none above the capture's own noise (a bare tone): show it at the floor
+    const sbv = car.e.sideband_db == null ? -120 : car.e.sideband_db;
+    h += meter({ key: "meter:sideband", label: "Modulation sidebands", value: sbv, display: car.e.sideband_db == null ? "none above noise" : sbv.toFixed(0) + " dB", min: -120, max: 0,
       zones: [[-120, t.sideband_floor_db, "rgba(139,154,179,.14)"], [t.sideband_full_db, 0, "rgba(248,113,113,.14)"]], ticks: [[t.sideband_floor_db, "bare tone"], [t.sideband_full_db, "modulated"]] });
   }
   h += `</div>`;
