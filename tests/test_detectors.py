@@ -64,7 +64,9 @@ def test_report_serialises():
     sig = synth.out_of_band(sample_rate=SR)
     d = Pipeline().analyze(sig, SR).to_dict()
     assert d["verdict"] == HIGH_RISK
-    assert "findings" in d and len(d["findings"]) == 3
+    assert "findings" in d
+    assert [f["name"] for f in d["findings"]] == ["out_of_band_energy", "carrier_peak", "spectral_profile",
+                                                  "near_ultrasonic_carrier"]
 
 
 # --- realistic synthetic attack generator (benchmark/synth_attacks.py) ---
@@ -126,7 +128,9 @@ def test_bare_tone_is_a_beacon_not_a_carrier():
     sig = 0.02 * rng.standard_normal(n) + 0.5 * np.sin(2 * np.pi * 19_000.0 * t)
     report = Pipeline().analyze(sig, SR)
     carrier = next(f for f in report.findings if f.name == "carrier_peak")
-    assert carrier.evidence["sideband_db"] < -60
+    sb = carrier.evidence["sideband_db"]
+    assert sb is None or sb < -60          # None: no sidebands above the capture's own noise
+    assert carrier.evidence["modulated"] is False
     assert report.verdict == CLEAR
     assert "beacon" in carrier.detail
 

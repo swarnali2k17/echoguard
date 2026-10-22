@@ -24,9 +24,18 @@ def _bandlimited_noise(duration: float, sample_rate: int, low: float, high: floa
 
 
 def benign_speechlike(duration: float = 1.0, sample_rate: int = 48_000, seed: int = 1) -> np.ndarray:
-    """Speech-like audio: energy confined to the voice band (~150 Hz - 4 kHz)."""
-    sig = _bandlimited_noise(duration, sample_rate, 150.0, 4_000.0, seed)
-    return _normalise(sig)
+    """Speech-like audio as a microphone records it: energy in the voice band
+    (~150 Hz - 4 kHz) rolling off gently above it, on a -90 dBFS self-noise floor.
+
+    A real capture never has a band of digital silence above the voice; one
+    that does was low-passed by a codec and cannot be cleared (ultrasonic.py).
+    """
+    from scipy import signal as sps
+    rng = np.random.default_rng(seed)
+    n = int(duration * sample_rate)
+    sos = sps.butter(2, [150.0, 4_000.0], btype="bandpass", fs=sample_rate, output="sos")
+    sig = _normalise(sps.sosfilt(sos, rng.standard_normal(n)))
+    return sig + 10 ** (-90 / 20) * rng.standard_normal(n)
 
 
 def out_of_band(duration: float = 1.0, sample_rate: int = 48_000, tone_hz: float = 20_000.0,

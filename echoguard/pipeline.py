@@ -22,7 +22,8 @@ import numpy as np
 from .audio import to_float_mono
 from .detectors import default_detectors
 from .detectors.base import Detector, Finding
-from .detectors._dsp import compute_spectrum
+from .detectors._dsp import band_power, compute_spectrum, power_to_dbfs, total_power
+from .detectors.base import clip01
 
 CLEAR = "CLEAR"
 SUSPICIOUS = "SUSPICIOUS"
@@ -121,6 +122,106 @@ def validate_input(signal, sample_rate) -> tuple[np.ndarray, int]:
     return mono, sr
 
 
+# A carrier at 15-18 kHz sits below the 18 kHz out-of-band edge, so the
+# out-of-band detector is blind to it by construction (R = sqrt(0 x 1) = 0).
+# SWhisper's published hardware puts its carrier at ~16 kHz. This band also
+# holds beacons, power-supply whine and codec artefacts, so the evidence here
+# is stricter than above 18 kHz. All of it must hold:
+#   - the carrier detector found a narrow, prominent peak at 15-18 kHz;
+#   - its sideband plateau stands above the background (sideband_plateau_db);
+#   - the sideband energy FLUCTUATES in time far beyond what steady content
+#     gives: a spoken command modulates it syllable by syllable, while noise -
+#     including noise that rises with frequency, which can lift a plateau - is
+#     steady (variance of log band energy over ~20 ms frames against the
+#     theoretical steady-noise variance, chi-square test);
+#   - the flag persists for NEAR_PERSIST_WINDOWS consecutive windows.
+# The energy concentrated around the carrier (from 12 kHz up, above any speech
+# content) then stands in for the out-of-band share.
+NEAR_CARRIER_LOW, NEAR_CARRIER_HIGH = 15_000.0, 18_000.0
+NEAR_BAND_FLOOR_HZ = 12_000.0
+NEAR_BAND_HALF_WIDTH = 4_000.0
+FLUCTUATION_FALSE_ALARM_PROB = 1e-3
+# A 15-18 kHz flag must hold for this many consecutive windows (1 s windows, 0.5 s hop: ~2 s).
+# On 40 benign 60 s AAC-encoded tones at 15-18 kHz (white, pink, shaped dither) no run of flagged
+# windows exceeded 2; SWhisper's carrier keeps 214 runs of 3+ windows (30% of its 58 minutes).
+NEAR_PERSIST_WINDOWS = 3
+MIN_FLUCTUATION_FRAMES = 16
+
+
+def sideband_fluctuation(mono: np.ndarray, sr: int, fc: float) -> tuple[float, float] | None:
+    """(ratio, critical ratio): variance in time of the sideband band's log energy, over what steady
+    noise would give.
+
+    The reference is theoretical, not another band: each frame's band energy is a sum of n
+    Hann-windowed periodogram bins, whose log has variance ~ HANN_SUM_VARIANCE / n when the content
+    is steady (noise, a beacon's leakage, dither however it is shaped). A command fluctuates syllable
+    by syllable, far above that. A neighbouring band cannot serve as the reference: speech that is not
+    band-limited before modulation spreads sideband tails into it, so it flickers with the command.
+    Codec frame-gain flicker can also exceed the steady-noise variance; that is what the persistence
+    rule in `analyze_windows` answers.
+    """
+    from scipy import stats
+    from .detectors.modulation import HANN_SUM_VARIANCE
+    nfft = int(2 ** round(np.log2(0.02 * sr)))
+    k = len(mono) // nfft
+    if k < MIN_FLUCTUATION_FRAMES:
+        return None
+    frames = mono[:k * nfft].reshape(k, nfft) * np.hanning(nfft)
+    p = np.abs(np.fft.rfft(frames, axis=1)) ** 2
+    f = np.fft.rfftfreq(nfft, 1.0 / sr)
+    off = fc - f
+    side = (off >= 150.0) & (off <= 4_000.0)
+    n = int(np.count_nonzero(side))
+    if n < 4:
+        return None
+    es = np.log(p[:, side].sum(axis=1) + 1e-30)
+    steady = HANN_SUM_VARIANCE / n
+    ratio = float(np.var(es, ddof=1)) / steady
+    return ratio, float(stats.chi2.isf(FLUCTUATION_FALSE_ALARM_PROB, k - 1) / (k - 1))
+
+
+def near_ultrasonic_finding(spectrum, findings, mono: np.ndarray | None = None) -> Finding:
+    """Always returns a finding (stable JSON). Its risk is this path's own corroborated score."""
+    from .detectors.modulation import PLATEAU_FLOOR_DB, PLATEAU_FULL_DB
+    from .detectors.ultrasonic import MIN_BAND_LEVEL_DBFS, SATURATION_RATIO
+    keys = {"assessable": True, "carrier_hz": None, "band_hz": None, "band_share": None,
+            "band_level_dbfs": None, "sideband_plateau_db": None, "fluctuation_f": None, "fluctuation_f_crit": None}
+    def result(risk: float, detail: str, **ev) -> Finding:
+        return Finding(name="near_ultrasonic_carrier", risk=risk, detail=detail, evidence={**keys, **ev})
+    none = "No modulated carrier between 15 and 18 kHz."
+    carrier = next((f for f in findings if f.name == "carrier_peak"), None)
+    if carrier is None or not carrier.assessable:
+        return result(0.0, none)
+    ev = carrier.evidence
+    fc, plateau, prom = ev.get("peak_freq_hz"), ev.get("sideband_plateau_db"), ev.get("prominence_risk") or 0.0
+    if fc is None or not (NEAR_CARRIER_LOW <= fc < NEAR_CARRIER_HIGH) or prom <= 0.0:
+        return result(0.0, none)
+    if plateau is None or plateau < PLATEAU_FLOOR_DB:
+        return result(0.0, f"Tone at {fc/1000:.1f} kHz has no sideband plateau above the noise: a beacon, not a carrier.",
+                      carrier_hz=float(fc), sideband_plateau_db=plateau)
+    fl = sideband_fluctuation(mono, spectrum.sample_rate, fc) if mono is not None else None
+    if fl is None:
+        return result(0.0, f"Tone at {fc/1000:.1f} kHz: clip too short to test whether its sidebands carry a command.",
+                      carrier_hz=float(fc), sideband_plateau_db=float(plateau))
+    F, crit = fl
+    if not F > crit:
+        return result(0.0, (f"Tone at {fc/1000:.1f} kHz sits on a steady raised floor (sidebands do not fluctuate: "
+                            f"F {F:.1f} < {crit:.1f}) - noise shaping or a codec, not a command."),
+                      carrier_hz=float(fc), sideband_plateau_db=float(plateau), fluctuation_f=F, fluctuation_f_crit=crit)
+    lo = max(NEAR_BAND_FLOOR_HZ, fc - NEAR_BAND_HALF_WIDTH)
+    hi = min(spectrum.nyquist, fc + NEAR_BAND_HALF_WIDTH)
+    share = band_power(spectrum.freqs, spectrum.psd, lo, hi) / total_power(spectrum.freqs, spectrum.psd)
+    level = power_to_dbfs(band_power(spectrum.freqs, spectrum.psd, lo, hi))
+    share_risk = 0.0 if level < MIN_BAND_LEVEL_DBFS else clip01(share / SATURATION_RATIO)
+    mod_conf = clip01((plateau - PLATEAU_FLOOR_DB) / (PLATEAU_FULL_DB - PLATEAU_FLOOR_DB))
+    risk = float((share_risk * mod_conf * prom) ** 0.5)
+    return result(risk, (f"Speech-modulated carrier at {fc/1000:.1f} kHz, below the 18 kHz edge: sidebands "
+                         f"{plateau:.0f} dB above the background and fluctuating like speech (F {F:.0f}); "
+                         f"{share*100:.1f}% of the energy sits around it ({lo/1000:.0f}-{hi/1000:.0f} kHz)."),
+                  carrier_hz=float(fc), band_hz=[float(lo), float(hi)], band_share=float(share),
+                  band_level_dbfs=float(level), sideband_plateau_db=float(plateau), fluctuation_f=F, fluctuation_f_crit=crit)
+
+
 class Pipeline:
     """Runs a set of detectors over a signal and aggregates their findings.
 
@@ -135,11 +236,19 @@ class Pipeline:
 
     def analyze(self, signal, sample_rate) -> Report:
         mono, sr = validate_input(signal, sample_rate)
-        return self._analyze_clean(mono, sr)
+        report = self._analyze_clean(mono, sr)
+        if self._near_only(report):
+            # one spectrum cannot show persistence: confirm a 15-18 kHz flag inside the clip, or set it aside
+            win, hop = sr, sr // 2
+            windows = [self._analyze_clean(mono[s:s + win], sr, s / sr) for s in range(0, len(mono) - win + 1, hop)]
+            if not any(self._near_only(r) for r in self._require_persistence(windows)):
+                report = self._without_near(report)
+        return report
 
     def _analyze_clean(self, mono: np.ndarray, sr: int, start_sec: float = 0.0) -> Report:
         spectrum = compute_spectrum(mono, sr)
         findings = [d.analyze(mono, sr, spectrum) for d in self.detectors]
+        findings.append(near_ultrasonic_finding(spectrum, findings, mono))
         risks = {f.name: f.risk for f in findings}
         any_unassessable = any(not f.assessable for f in findings)
 
@@ -166,18 +275,63 @@ class Pipeline:
         win = max(MIN_SAMPLES, int(round(window_sec * sr)))
         hop = max(1, int(round(hop_sec * sr)))
         if len(mono) <= win:
-            reports = [self._analyze_clean(mono, sr)]
+            # one window cannot show persistence, so a 15-18 kHz flag alone is set aside
+            reports = self._require_persistence([self._analyze_clean(mono, sr)])
         else:
             starts = list(range(0, len(mono) - win + 1, hop))
             if starts[-1] + win < len(mono):
                 starts.append(len(mono) - win)  # cover the tail
             reports = [self._analyze_clean(mono[s:s + win], sr, start_sec=s / sr) for s in starts]
+            reports = self._require_persistence(reports)
         return WindowedReport(
             summary=self._summarise(reports, len(mono) / sr),
             windows=reports,
             window_sec=window_sec,
             hop_sec=hop_sec,
         )
+
+    @staticmethod
+    def _near_only(report: Report) -> bool:
+        """Flagged only through the 15-18 kHz path (the established >18 kHz path is quiet)."""
+        risks = {f.name: f.risk for f in report.findings}
+        main = (risks.get("out_of_band_energy", 0.0) * risks.get("carrier_peak", 0.0)) ** 0.5
+        return main < SUSPICIOUS_RISK <= risks.get("near_ultrasonic_carrier", 0.0)
+
+    @classmethod
+    def _without_near(cls, report: Report) -> Report:
+        """The window's verdict with an unpersistent 15-18 kHz flag set aside, and saying so."""
+        risks = {f.name: f.risk for f in report.findings}
+        main = float((risks.get("out_of_band_energy", 0.0) * risks.get("carrier_peak", 0.0)) ** 0.5)
+        findings = []
+        for f in report.findings:
+            if f.name == "near_ultrasonic_carrier":
+                f = Finding(name=f.name, risk=0.0, assessable=f.assessable, evidence={**f.evidence},
+                            detail=f.detail + " Not persistent (under ~2 s) - set aside: codec artefacts "
+                                              "around a loud tone can mimic it for a moment; a command persists.")
+            findings.append(f)
+        return Report(overall_risk=main, verdict=cls._verdict(main, any(not f.assessable for f in findings)),
+                      findings=findings, sample_rate=report.sample_rate, duration_sec=report.duration_sec,
+                      start_sec=report.start_sec)
+
+    @classmethod
+    def _require_persistence(cls, reports: List[Report]) -> List[Report]:
+        """A 15-18 kHz flag stands only within a run of NEAR_PERSIST_WINDOWS consecutive windows
+        that all carry it (~2 s at the default 1 s / 0.5 s windows): codec artefacts around a loud
+        tone mimic a modulated carrier for a moment; a command persists."""
+        near = [cls._near_only(r) for r in reports]
+        keep = [False] * len(reports)
+        i = 0
+        while i < len(reports):
+            if near[i]:
+                j = i
+                while j < len(reports) and near[j]:
+                    j += 1
+                if j - i >= NEAR_PERSIST_WINDOWS:
+                    keep[i:j] = [True] * (j - i)
+                i = j
+            else:
+                i += 1
+        return [cls._without_near(r) if near[k] and not keep[k] else r for k, r in enumerate(reports)]
 
     @staticmethod
     def _summarise(reports: List[Report], total_sec: float) -> Report:
@@ -208,7 +362,9 @@ class Pipeline:
         """
         oob = risks.get("out_of_band_energy", 0.0)
         carrier = risks.get("carrier_peak", 0.0)
-        return float((oob * carrier) ** 0.5)
+        # A modulated carrier at 15-18 kHz puts no energy above 18 kHz; its own path
+        # (near_ultrasonic_finding) is already a corroborated score.
+        return float(max((oob * carrier) ** 0.5, risks.get("near_ultrasonic_carrier", 0.0)))
 
     @staticmethod
     def _verdict(risk: float, any_unassessable: bool = False) -> str:
@@ -244,6 +400,7 @@ class StreamAnalyzer:
         self.pipeline = pipeline or Pipeline()
         self._buf = np.zeros(0, dtype=np.float64)
         self._consumed = 0  # samples before the start of _buf
+        self._near_run = 0  # consecutive windows flagged only through the 15-18 kHz path
 
     def push(self, chunk) -> Iterator[Report]:
         arr = np.asarray(chunk)
@@ -262,14 +419,22 @@ class StreamAnalyzer:
         out: List[Report] = []
         while len(self._buf) >= self.win:
             start = self._consumed / self.sr
-            out.append(self.pipeline._analyze_clean(self._buf[:self.win], self.sr, start_sec=start))
+            out.append(self._persist(self.pipeline._analyze_clean(self._buf[:self.win], self.sr, start_sec=start)))
             self._buf = self._buf[self.hop:]
             self._consumed += self.hop
         if final and len(self._buf) >= MIN_SAMPLES:
-            out.append(self.pipeline._analyze_clean(self._buf, self.sr, start_sec=self._consumed / self.sr))
+            out.append(self._persist(self.pipeline._analyze_clean(self._buf, self.sr, start_sec=self._consumed / self.sr)))
             self._consumed += len(self._buf)
             self._buf = np.zeros(0, dtype=np.float64)
         return iter(out)
+
+    def _persist(self, r: Report) -> Report:
+        """A 15-18 kHz flag stands once NEAR_PERSIST_WINDOWS consecutive windows carry it (see
+        `Pipeline._require_persistence`). A stream cannot look ahead, so the first windows of a
+        run are reported without it."""
+        near = Pipeline._near_only(r)
+        self._near_run = self._near_run + 1 if near else 0
+        return Pipeline._without_near(r) if near and self._near_run < NEAR_PERSIST_WINDOWS else r
 
 
 def iter_windows(signal, sample_rate, window_sec: float = 1.0, hop_sec: float = 0.5) -> Iterable[Report]:
