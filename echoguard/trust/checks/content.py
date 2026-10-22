@@ -67,6 +67,24 @@ PATTERNS: tuple[Pattern, ...] = (
             "invokes a privileged mode"),
     Pattern("role_change", r"\b(do anything now|no restrictions|without (any )?(restrictions|limits|filters))\b", 0.8,
             "asks for unrestricted behaviour"),
+    Pattern("role_change", r"\byou are (a|an)\s+(\w+\s+){1,3}(who|that)\s+(always|never|will always|must|does not|doesn't)\b", 0.7,
+            "assigns the agent a persona defined by what it will always or never do"),
+    # jailbreak — the published families of LLM jailbreaks (Wei et al., "Jailbroken", 2023): an
+    # always-comply persona, suppressing refusals, forcing the answer's first words, waiving ethics,
+    # and fictional framing. Templates of this kind are what spoken-injection attacks such as
+    # SWhisper deliver to voice agents.
+    Pattern("jailbreak", r"\b(fulfills?|fulfil|compl(y|ies) with|answers?|obeys?|carr(y|ies) out|does)\b.{0,40}\b(requests?|commands?|questions?|orders?|instructions?)\b.{0,30}\bregardless of\b", 0.8,
+            "demands compliance with any request regardless of its nature"),
+    Pattern("jailbreak", r"\b(never|don't|do not|must not|mustn't)\s+(ever\s+)?(use|say|write|include|respond with|reply with|answer with|start with|add)\b.{0,40}\b(i can't|i cant|i cannot|i can not|i'm sorry|im sorry|i apologi[sz]e|as an ai|unable to (help|assist)|(can't|cannot) (help|assist|fulfill|comply))", 0.8,
+            "forbids the model's refusals"),
+    Pattern("jailbreak", r"\b(never|don't|do not|must not)\s+(refuse|decline|apologi[sz]e|moralis?e|moralize|lecture)\b|\bwithout (any )?(refusals?|disclaimers?|warnings?|moralis?ing|moralizing)\b", 0.6,
+            "forbids refusals, warnings or disclaimers"),
+    Pattern("jailbreak", r"\b(begin|start|open)\s+(every|each|all|your)\s+(of your\s+)?(responses?|repl(y|ies)|answers?|messages?)\s+with\b|\b(respond|reply|answer)\s+(only\s+)?(by\s+)?(beginning|starting)\s+with\b", 0.7,
+            "dictates the first words of every answer"),
+    Pattern("jailbreak", r"\b(disregard(ing)?|ignor(e|ing)|regardless of|set(ting)? aside|forget(ting)?|without regard (to|for)|no regard for|free from|unbound by)\b.{0,25}\b(ethic\w*|moral\w*|legal\w*|consequences|guardrails?|content polic(y|ies))\b", 0.8,
+            "asks the model to set aside ethics, law or its content policy"),
+    Pattern("jailbreak", r"\b(purely |entirely |completely |strictly )?(hypothetic\w*|fictional|fictitious|for (educational|research|academic) purposes)\b", 0.3,
+            "frames the request as hypothetical or fictional — matters only alongside another signal"),
     # exfiltration — the sentence asks the agent to reveal its own configuration
     Pattern("exfiltration", r"\b(repeat|reveal|show|print|read( out| me)?|tell me|recite|say)\b.{0,30}\b(system prompt|your (instructions|rules|configuration|prompt)|hidden (instructions|prompt)|the rules you were given)\b(?!\s+(for|on|about)\b)|\bwhat (is|are) your (system prompt|hidden instructions|configuration)\b", 0.8,
             "asks the agent to disclose its instructions"),
